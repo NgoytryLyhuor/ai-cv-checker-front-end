@@ -1218,10 +1218,8 @@ body {
 
 .cat-tabs {
   display: flex;
-  gap: 0.35rem;
-  overflow-x: auto;
-  padding-bottom: 0.15rem;
-  -webkit-overflow-scrolling: touch;
+  flex-wrap: wrap;
+  gap: 0.4rem;
 }
 
 .cat-tab {
@@ -1544,7 +1542,7 @@ body {
   margin-bottom: 0.65rem;
 }
 
-.jobify-hero h1 {
+.jobify-hero .jobify-hero-copy h1 {
   margin: 0 0 0.65rem;
   font-size: clamp(1.5rem, 5vw, 2.5rem);
   line-height: 1.2;
@@ -1863,7 +1861,7 @@ body {
    ===================================================================== */
 .a4-scale-wrapper {
   width: 100%;
-  overflow: hidden;
+  overflow: clip;
   position: relative;
   border-radius: 0.45rem;
   box-shadow: 0 8px 28px rgba(15, 23, 42, 0.12);
@@ -2542,4 +2540,299 @@ body {
     width: 100% !important;
     min-height: 0 !important;
   }
+}
+
+/* =====================================================================
+   JOBIFY-STYLE SWIPEABLE CAROUSEL & GRID TEMPLATE GALLERY (.jb-gallery)
+   ===================================================================== */
+.jb-gallery {
+  margin-bottom: 1.25rem;
+}
+
+.jb-eyebrow {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #1a5276;
+  text-transform: uppercase;
+}
+
+.jb-title {
+  margin: 0.2rem 0 0.35rem;
+  font-size: clamp(1.25rem, 3.8vw, 1.65rem);
+  color: #0f172a;
+}
+
+.jb-note {
+  margin: 0 0 0.85rem;
+  font-size: 0.86rem;
+  color: #64748b;
+}
+
+.jb-toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  margin-bottom: 0.65rem;
+}
+
+.jb-family-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.jb-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #334155;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.jb-chip-count {
+  font-size: 0.74rem;
+  padding: 0.08rem 0.42rem;
+  border-radius: 999px;
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.jb-chip--active {
+  background: #1a5276;
+  border-color: #1a5276;
+  color: #ffffff;
+}
+
+.jb-chip--active .jb-chip-count {
+  background: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+}
+
+.jb-toolbar-end {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+}
+
+.jb-view-switch {
+  display: inline-flex;
+  background: #f1f5f9;
+  padding: 0.2rem;
+  border-radius: 0.55rem;
+  gap: 0.2rem;
+}
+
+.jb-view-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.65rem;
+  border: none;
+  border-radius: 0.4rem;
+  background: transparent;
+  color: #475569;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.jb-view-btn--active {
+  background: #ffffff;
+  color: #1a5276;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.1);
+}
+
+.jb-arrows {
+  display: inline-flex;
+  gap: 0.35rem;
+}
+
+.jb-arrow {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #1e293b;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.jb-design-count {
+  margin: 0 0 0.65rem;
+  font-size: 0.84rem;
+  color: #64748b;
+}
+
+/* Carousel (Left-to-Right Swipe on Mobile & Desktop) */
+.jb-cards--carousel {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding: 0.25rem 0.15rem 0.85rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+.jb-cards--carousel .jb-card {
+  flex: 0 0 88%;
+  max-width: 320px;
+  scroll-snap-align: center;
+}
+
+/* Grid Mode */
+.jb-cards--grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .jb-toolbar {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .jb-cards--carousel .jb-card {
+    flex: 0 0 295px;
+  }
+
+  .jb-cards--grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 900px) {
+  .jb-cards--grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.jb-card {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 1rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.jb-card--selected {
+  border-color: #1a5276;
+  box-shadow: 0 6px 20px rgba(26, 82, 118, 0.12);
+}
+
+.jb-preview-btn {
+  border: none;
+  background: #eef2f6;
+  padding: 1rem 1rem 0.65rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.55rem;
+  width: 100%;
+  text-align: center;
+}
+
+.jb-preview-frame {
+  width: 100%;
+}
+
+.jb-thumb-caption {
+  font-size: 0.78rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.jb-card-info {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.jb-card-title {
+  margin: 0;
+  font-size: 1.08rem;
+  font-weight: 700;
+  color: #1a5276;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.jb-new-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  background: #e0f2fe;
+  color: #0369a1;
+  padding: 0.14rem 0.5rem;
+  border-radius: 999px;
+}
+
+.jb-card-sub {
+  margin: 0;
+  font-size: 0.82rem;
+  color: #64748b;
+}
+
+.jb-colors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin: 0.25rem 0 0.4rem;
+}
+
+.jb-color-dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 0 1px #cbd5e1;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.12s;
+}
+
+.jb-color-dot--active {
+  box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #1a5276;
+  transform: scale(1.06);
+}
+
+.jb-create-btn {
+  width: 100%;
+  min-height: 40px;
+  padding: 0.5rem 0.85rem;
+  border-radius: 0.55rem;
+  border: 1.5px solid #1a5276;
+  background: #ffffff;
+  color: #1a5276;
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.jb-create-btn:hover,
+.jb-create-btn--selected {
+  background: #1a5276;
+  color: #ffffff;
 }

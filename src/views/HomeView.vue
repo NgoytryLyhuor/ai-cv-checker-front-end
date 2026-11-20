@@ -5,8 +5,9 @@ import axios from 'axios'
 import { ArrowRight, CheckCircle2, FileText, ImagePlus, Palette, Sparkles, X } from 'lucide-vue-next'
 import CvUploader from '@/components/CvUploader.vue'
 import CvTemplatePreview from '@/components/CvTemplatePreview.vue'
+import TemplateGallery from '@/components/TemplateGallery.vue'
 import { createCheck } from '@/api/checks'
-import { CV_PALETTES, CV_TEMPLATES } from '@/config/cvTemplates'
+import { CV_TEMPLATES, type CvTemplateOption } from '@/config/cvTemplates'
 import { useCheckStore } from '@/stores/checkStore'
 import { useI18n } from '@/composables/useI18n'
 import type { CheckServiceType, StructuredCv } from '@/types/check'
@@ -32,7 +33,6 @@ const canSubmit = computed(() => {
   return activeCvText.value.length >= 100 && consent.value && !isSubmitting.value
 })
 
-const showcaseTemplates = computed(() => CV_TEMPLATES.slice(0, 6))
 const heroTemplate = CV_TEMPLATES[0]!
 
 const sampleShowcaseCv: StructuredCv = {
@@ -98,6 +98,11 @@ function clearHomePhoto(): void {
 
 function scrollToBuilder(): void {
   document.getElementById('cv-builder-box')?.scrollIntoView({ behavior: 'smooth' })
+}
+
+function onHomeSelectTemplate(tpl: CvTemplateOption, hex: string): void {
+  store.setDesignChoice(tpl.id, hex)
+  scrollToBuilder()
 }
 
 async function onSubmit(): Promise<void> {
@@ -316,7 +321,7 @@ async function onSubmit(): Promise<void> {
     <section class="section-card">
       <span class="eyebrow">YOUR EXPERIENCE, WELL PRESENTED</span>
       <h2 class="section-title">Why MY CV BUILDER?</h2>
-      <div class="why-grid">
+      <div class="why-grid" style="margin-bottom: 1.5rem">
         <div class="why-card">
           <Sparkles class="icon-md" aria-hidden="true" />
           <h3>41 Templates</h3>
@@ -339,36 +344,15 @@ async function onSubmit(): Promise<void> {
         </div>
       </div>
 
-      <div class="jobify-gallery-grid">
-        <article v-for="tpl in showcaseTemplates" :key="tpl.id" class="jobify-tpl-card">
-          <div class="jobify-tpl-preview-box">
-            <CvTemplatePreview
-              :cv="sampleShowcaseCv"
-              :template="tpl"
-              :accent-hex="tpl.defaultColor"
-              :thumbnail="true"
-            />
-            <span class="jobify-tpl-caption">First-page preview</span>
-          </div>
-          <div class="jobify-tpl-meta">
-            <div class="jobify-tpl-title-row">
-              <h3>{{ tpl.name }}</h3>
-              <span class="jobify-new-badge">New</span>
-            </div>
-            <div class="palette-row">
-              <span
-                v-for="pal in CV_PALETTES.slice(0, 6)"
-                :key="`${tpl.id}-${pal.id}`"
-                class="swatch"
-                :style="{ backgroundColor: pal.hex }"
-              />
-            </div>
-            <RouterLink to="/sample" class="btn btn--secondary btn--full btn--sm">
-              Create with this template
-            </RouterLink>
-          </div>
-        </article>
-      </div>
+      <TemplateGallery
+        :cv="sampleShowcaseCv"
+        :selected-template-id="store.selectedTemplateId"
+        :selected-palette-hex="store.selectedPaletteHex"
+        :photo-url="store.profilePhotoUrl"
+        action-label="Create with this template"
+        @select="onHomeSelectTemplate"
+        @preview="onHomeSelectTemplate"
+      />
     </section>
   </div>
 </template>

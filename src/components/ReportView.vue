@@ -2,12 +2,8 @@
 import { computed, reactive, ref, watch } from 'vue'
 import { Check, ChevronDown, ChevronUp, Copy, Eye, ImagePlus, Pencil, Printer, Sparkles, X } from 'lucide-vue-next'
 import CvTemplatePreview from '@/components/CvTemplatePreview.vue'
-import {
-  CV_PALETTES,
-  CV_TEMPLATES,
-  type CvTemplateCategory,
-  type CvTemplateOption,
-} from '@/config/cvTemplates'
+import TemplateGallery from '@/components/TemplateGallery.vue'
+import { CV_TEMPLATES, type CvTemplateOption } from '@/config/cvTemplates'
 import type { CheckResult, StructuredCv } from '@/types/check'
 import { useCheckStore } from '@/stores/checkStore'
 import { useI18n } from '@/composables/useI18n'
@@ -21,12 +17,10 @@ const store = useCheckStore()
 const { locale, t } = useI18n()
 
 type TabKey = 'template' | 'text' | 'original'
-type CategoryFilter = 'all' | CvTemplateCategory
 
 const activeTab = ref<TabKey>(props.result.structuredCv ? 'template' : 'text')
-const categoryFilter = ref<CategoryFilter>('all')
-const selectedTemplateId = ref<string>(CV_TEMPLATES[0]?.id ?? 'slate-portrait')
-const selectedPalette = ref<string>(CV_PALETTES[0]?.hex ?? '#3b4757')
+const selectedTemplateId = ref<string>(store.selectedTemplateId || CV_TEMPLATES[0]?.id || 'slate-portrait')
+const selectedPalette = ref<string>(store.selectedPaletteHex || CV_TEMPLATES[0]?.defaultColor || '#3b4757')
 const photoUrl = computed(() => store.profilePhotoUrl)
 const copied = ref(false)
 const showFeedback = ref(false)
@@ -55,18 +49,19 @@ watch(skillsInput, (val) => {
     .filter(Boolean)
 })
 
-const filteredTemplates = computed(() => {
-  if (categoryFilter.value === 'all') return CV_TEMPLATES
-  return CV_TEMPLATES.filter((tpl) => tpl.category === categoryFilter.value)
-})
-
 const selectedTemplate = computed<CvTemplateOption>(
   () => CV_TEMPLATES.find((tpl) => tpl.id === selectedTemplateId.value) ?? CV_TEMPLATES[0]!,
 )
 
-function selectTemplate(tpl: CvTemplateOption): void {
+function onGallerySelect(tpl: CvTemplateOption, hex: string): void {
   selectedTemplateId.value = tpl.id
-  selectedPalette.value = tpl.defaultColor
+  selectedPalette.value = hex
+  store.setDesignChoice(tpl.id, hex)
+}
+
+function onGalleryPreview(tpl: CvTemplateOption, hex: string): void {
+  onGallerySelect(tpl, hex)
+  openPdfPreview()
 }
 
 const hasOriginal = computed(() => Boolean(props.originalText?.trim()))
@@ -177,115 +172,40 @@ function printReport(): void {
       </div>
     </div>
 
-    <!-- 41-Template Gallery & Color Customizer -->
-    <div v-if="result.structuredCv" class="customizer-box no-print" data-testid="template-customizer">
-      <div class="customizer-header-row">
-        <span class="label">{{ t[locale].chooseTemplate }} ({{ filteredTemplates.length }})</span>
-        <div class="cat-tabs" role="tablist" aria-label="Template categories">
-          <button
-            type="button"
-            class="cat-tab"
-            :class="{ 'cat-tab--active': categoryFilter === 'all' }"
-            data-testid="cat-all"
-            @click="categoryFilter = 'all'"
-          >
-            All (41)
-          </button>
-          <button
-            type="button"
-            class="cat-tab"
-            :class="{ 'cat-tab--active': categoryFilter === 'classic' }"
-            data-testid="cat-classic"
-            @click="categoryFilter = 'classic'"
-          >
-            Classic &amp; Modern
-          </button>
-          <button
-            type="button"
-            class="cat-tab"
-            :class="{ 'cat-tab--active': categoryFilter === 'scenic' }"
-            data-testid="cat-scenic"
-            @click="categoryFilter = 'scenic'"
-          >
-            Angkor &amp; Scenic
-          </button>
-          <button
-            type="button"
-            class="cat-tab"
-            :class="{ 'cat-tab--active': categoryFilter === 'backdrop' }"
-            data-testid="cat-backdrop"
-            @click="categoryFilter = 'backdrop'"
-          >
-            Photo Backdrop
-          </button>
-        </div>
-      </div>
+    <!-- Jobify-style Swipeable Carousel & Grid Template Picker -->
+    <div v-if="result.structuredCv" class="no-print">
+      <TemplateGallery
+        :cv="editableCv"
+        :selected-template-id="selectedTemplateId"
+        :selected-palette-hex="selectedPalette"
+        :photo-url="photoUrl"
+        action-label="Use this template"
+        @select="onGallerySelect"
+        @preview="onGalleryPreview"
+      />
 
-      <div class="template-strip" role="radiogroup" aria-label="CV Templates">
+      <div class="photo-controls" style="margin-bottom: 1rem">
+        <label v-if="selectedTemplate.supportsPhoto" class="btn btn--secondary btn--sm">
+          <ImagePlus class="icon-sm" aria-hidden="true" />
+          {{ t[locale].uploadPhoto }}
+          <input type="file" accept="image/*" class="sr-only" @change="onPhotoSelected" />
+        </label>
+        <button v-if="photoUrl" type="button" class="btn btn--secondary btn--sm" @click="clearPhoto">
+          <X class="icon-sm" aria-hidden="true" />
+          {{ t[locale].removePhoto }}
+        </button>
         <button
-          v-for="tpl in filteredTemplates"
-          :key="tpl.id"
           type="button"
-          class="tpl-card"
-          :class="{ 'tpl-card--active': selectedTemplateId === tpl.id }"
-          :data-testid="`tpl-${tpl.id}`"
-          @click="selectTemplate(tpl)"
+          class="btn btn--secondary btn--sm"
+          data-testid="edit-cv-toggle"
+          @click="showEditor = !showEditor"
         >
-          <span
-            class="tpl-thumb"
-            :class="`tpl-thumb--${tpl.layout}`"
-            :style="{ '--thumb-accent': tpl.defaultColor }"
-            aria-hidden="true"
-          >
-            <span class="tpl-thumb-bar" />
-            <span class="tpl-thumb-lines" />
-          </span>
-          <strong class="tpl-card-name">{{ tpl.name }}</strong>
+          <Pencil class="icon-sm" aria-hidden="true" />
+          {{ t[locale].editDetailsBtn }}
         </button>
       </div>
 
-      <div class="customizer-row">
-        <div class="customizer-group">
-          <span class="label">{{ t[locale].chooseColor }}</span>
-          <div class="palette-row">
-            <button
-              v-for="pal in CV_PALETTES"
-              :key="pal.id"
-              type="button"
-              class="swatch"
-              :class="{ 'swatch--active': selectedPalette === pal.hex }"
-              :style="{ backgroundColor: pal.hex }"
-              :title="pal.name"
-              :aria-label="pal.name"
-              :data-testid="`palette-${pal.id}`"
-              @click="selectedPalette = pal.hex"
-            />
-          </div>
-        </div>
-
-        <div class="photo-controls">
-          <label v-if="selectedTemplate.supportsPhoto" class="btn btn--secondary btn--sm">
-            <ImagePlus class="icon-sm" aria-hidden="true" />
-            {{ t[locale].uploadPhoto }}
-            <input type="file" accept="image/*" class="sr-only" @change="onPhotoSelected" />
-          </label>
-          <button v-if="photoUrl" type="button" class="btn btn--secondary btn--sm" @click="clearPhoto">
-            <X class="icon-sm" aria-hidden="true" />
-            {{ t[locale].removePhoto }}
-          </button>
-          <button
-            type="button"
-            class="btn btn--secondary btn--sm"
-            data-testid="edit-cv-toggle"
-            @click="showEditor = !showEditor"
-          >
-            <Pencil class="icon-sm" aria-hidden="true" />
-            {{ t[locale].editDetailsBtn }}
-          </button>
-        </div>
-      </div>
-
-      <div v-if="showEditor" class="editor-panel" data-testid="cv-editor-panel">
+      <div v-if="showEditor" class="editor-panel" style="margin-bottom: 1rem" data-testid="cv-editor-panel">
         <div class="editor-grid">
           <label class="editor-field">
             <span>Full Name</span>

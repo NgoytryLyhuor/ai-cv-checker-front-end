@@ -80,7 +80,7 @@ const isClassicNavy = computed(() => props.template.id === 'phnom-penh-classic')
         '--cv-accent': accentHex,
         transform: `scale(${scale})`,
       }"
-      data-testid="cv-template-sheet"
+      :data-testid="thumbnail ? 'cv-template-thumb' : 'cv-template-sheet'"
     >
       <!-- Decorative Corner Triangles for Two-Tone Corner -->
       <template v-if="isTwoToneCorner">
@@ -115,7 +115,7 @@ const isClassicNavy = computed(() => props.template.id === 'phnom-penh-classic')
         </svg>
 
         <div class="a4-top-banner-inner">
-          <div class="a4-avatar-wrap" data-testid="cv-avatar-slot">
+          <div class="a4-avatar-wrap" :data-testid="thumbnail ? undefined : 'cv-avatar-slot'">
             <img v-if="photoUrl" :src="photoUrl" alt="Candidate portrait" class="a4-avatar" />
             <div v-else class="a4-avatar-initials">{{ initials }}</div>
           </div>
@@ -148,7 +148,7 @@ const isClassicNavy = computed(() => props.template.id === 'phnom-penh-classic')
             v-if="isSplitSidebar"
             class="a4-sidebar-photo-box"
             :class="{ 'a4-sidebar-photo-box--overlap': isTwoToneCorner }"
-            data-testid="cv-avatar-slot"
+            :data-testid="thumbnail ? undefined : 'cv-avatar-slot'"
           >
             <img v-if="photoUrl" :src="photoUrl" alt="Candidate portrait" class="a4-avatar a4-avatar--lg" />
             <div v-else class="a4-avatar-initials a4-avatar-initials--lg">{{ initials }}</div>
