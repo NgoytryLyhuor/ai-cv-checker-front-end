@@ -13,18 +13,23 @@ const { locale, t, toggleLocale } = useI18n()
           {{ t[locale].brand }}
         </RouterLink>
 
+        <button
+          type="button"
+          class="lang-btn"
+          data-testid="lang-toggle"
+          @click="toggleLocale"
+        >
+          <Languages class="icon-sm" aria-hidden="true" />
+          {{ locale === 'en' ? 'ខ្មែរ' : 'EN' }}
+        </button>
+
         <nav class="nav-links" aria-label="Main navigation">
-          <RouterLink to="/sample" class="nav-link">{{ t[locale].navSample }}</RouterLink>
-          <RouterLink to="/privacy" class="nav-link">{{ t[locale].navPrivacy }}</RouterLink>
-          <button
-            type="button"
-            class="lang-btn"
-            data-testid="lang-toggle"
-            @click="toggleLocale"
-          >
-            <Languages class="icon-sm" aria-hidden="true" />
-            {{ locale === 'en' ? 'ខ្មែរ' : 'EN' }}
-          </button>
+          <RouterLink to="/sample" class="nav-link" data-testid="nav-sample">
+            {{ t[locale].navSample }}
+          </RouterLink>
+          <RouterLink to="/privacy" class="nav-link" data-testid="nav-privacy">
+            {{ t[locale].navPrivacy }}
+          </RouterLink>
         </nav>
       </div>
     </header>
