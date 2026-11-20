@@ -36,6 +36,9 @@ export interface CheckResultDto {
   strengths: string[]
   weaknesses: string[]
   suggestions: string[]
+  strengths_km?: string[]
+  weaknesses_km?: string[]
+  suggestions_km?: string[]
   improved_cv: string | null
   translated_cv: string | null
   structured_cv: StructuredCvDto | null
@@ -73,6 +76,9 @@ export interface CheckResult {
   strengths: string[]
   weaknesses: string[]
   suggestions: string[]
+  strengthsKm?: string[]
+  weaknessesKm?: string[]
+  suggestionsKm?: string[]
   improvedCv: string | null
   translatedCv: string | null
   structuredCv: StructuredCv | null

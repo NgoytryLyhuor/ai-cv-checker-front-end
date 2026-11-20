@@ -65,12 +65,12 @@ onMounted(() => {
 <template>
   <div class="page-stack">
     <div v-if="loading" class="form-card" aria-live="polite">
-      <p>Loading your CV report...</p>
+      <p>{{ t[locale].resultLoading }}</p>
     </div>
 
     <div v-else-if="errorState" class="form-card" data-testid="result-error">
       <h2>
-        {{ errorState === 'EXPIRED' ? 'Report Expired' : 'Report Unavailable' }}
+        {{ errorState === 'EXPIRED' ? t[locale].resultNotFound : t[locale].resultUnavailable }}
       </h2>
       <p>{{ errorMessage }}</p>
       <div class="hero-actions">

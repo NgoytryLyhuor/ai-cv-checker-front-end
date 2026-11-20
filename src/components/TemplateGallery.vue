@@ -2,6 +2,7 @@
 import { computed, reactive, ref } from 'vue'
 import { ChevronLeft, ChevronRight, LayoutGrid, GalleryHorizontal } from 'lucide-vue-next'
 import CvTemplatePreview from '@/components/CvTemplatePreview.vue'
+import { useI18n } from '@/composables/useI18n'
 import {
   CV_PALETTES,
   CV_TEMPLATES,
@@ -9,6 +10,8 @@ import {
   type CvTemplateOption,
 } from '@/config/cvTemplates'
 import type { StructuredCv } from '@/types/check'
+
+const { locale, t } = useI18n()
 
 const props = withDefaults(
   defineProps<{
@@ -26,6 +29,7 @@ const props = withDefaults(
 
 const emit = defineEmits<{
   select: [template: CvTemplateOption, paletteHex: string]
+  color: [template: CvTemplateOption, paletteHex: string]
   preview: [template: CvTemplateOption, paletteHex: string]
 }>()
 
@@ -46,13 +50,26 @@ function getCardColor(tpl: CvTemplateOption): string {
 
 function getCardColorName(tpl: CvTemplateOption): string {
   const hex = getCardColor(tpl).toLowerCase()
+  const swatchMatch = tpl.swatches.find((s) => s.hex.toLowerCase() === hex)
+  if (swatchMatch) return swatchMatch.name
   const found = CV_PALETTES.find((p) => p.hex.toLowerCase() === hex)
   return found ? found.name : 'Original'
 }
 
+function getCardSwatches(tpl: CvTemplateOption): Array<{ id: string; name: string; hex: string }> {
+  if (tpl.swatches.length > 0) {
+    return tpl.swatches.map((s) => ({
+      id: `color-${s.hex.replace('#', '').toLowerCase()}`,
+      name: s.name,
+      hex: s.hex,
+    }))
+  }
+  return CV_PALETTES.slice(0, 8)
+}
+
 function pickCardColor(tpl: CvTemplateOption, hex: string): void {
   cardColors[tpl.id] = hex
-  emit('select', tpl, hex)
+  emit('color', tpl, hex)
 }
 
 function chooseCardTemplate(tpl: CvTemplateOption): void {
@@ -86,11 +103,11 @@ function scrollCarousel(dir: -1 | 1): void {
 </script>
 
 <template>
-  <section class="jb-gallery" data-testid="template-customizer">
-    <p class="jb-eyebrow">FIND YOUR STYLE</p>
-    <h2 class="jb-title">A design for your story</h2>
+  <section id="cv-designs" class="jb-gallery" data-testid="template-customizer">
+    <p class="jb-eyebrow">{{ t[locale].galleryEyebrow }}</p>
+    <h2 class="jb-title">{{ t[locale].galleryTitle }}</h2>
     <p class="jb-note">
-      Swipe left or right to browse templates and tap any color circle to preview live.
+      {{ t[locale].galleryNote }}
     </p>
 
     <div class="jb-toolbar">
@@ -102,7 +119,7 @@ function scrollCarousel(dir: -1 | 1): void {
           data-testid="cat-all"
           @click="categoryFilter = 'all'"
         >
-          All templates <span class="jb-chip-count">{{ counts.all }}</span>
+          {{ t[locale].catAll }} <span class="jb-chip-count">{{ counts.all }}</span>
         </button>
         <button
           type="button"
@@ -111,16 +128,7 @@ function scrollCarousel(dir: -1 | 1): void {
           data-testid="cat-classic"
           @click="categoryFilter = 'classic'"
         >
-          Classic &amp; modern <span class="jb-chip-count">{{ counts.classic }}</span>
-        </button>
-        <button
-          type="button"
-          class="jb-chip"
-          :class="{ 'jb-chip--active': categoryFilter === 'scenic' }"
-          data-testid="cat-scenic"
-          @click="categoryFilter = 'scenic'"
-        >
-          Angkor &amp; scenic <span class="jb-chip-count">{{ counts.scenic }}</span>
+          {{ t[locale].catClassic }} <span class="jb-chip-count">{{ counts.classic }}</span>
         </button>
         <button
           type="button"
@@ -129,7 +137,7 @@ function scrollCarousel(dir: -1 | 1): void {
           data-testid="cat-backdrop"
           @click="categoryFilter = 'backdrop'"
         >
-          Photo backdrop <span class="jb-chip-count">{{ counts.backdrop }}</span>
+          {{ t[locale].catBackdrop }} <span class="jb-chip-count">{{ counts.backdrop }}</span>
         </button>
       </div>
 
@@ -143,7 +151,7 @@ function scrollCarousel(dir: -1 | 1): void {
             @click="viewMode = 'carousel'"
           >
             <GalleryHorizontal class="icon-sm" aria-hidden="true" />
-            Carousel
+            {{ t[locale].viewCarousel }}
           </button>
           <button
             type="button"
@@ -153,7 +161,7 @@ function scrollCarousel(dir: -1 | 1): void {
             @click="viewMode = 'grid'"
           >
             <LayoutGrid class="icon-sm" aria-hidden="true" />
-            Grid
+            {{ t[locale].viewGrid }}
           </button>
         </div>
 
@@ -179,7 +187,7 @@ function scrollCarousel(dir: -1 | 1): void {
     </div>
 
     <p class="jb-design-count" role="status">
-      {{ filteredTemplates.length }} supported templates
+      {{ filteredTemplates.length }} {{ t[locale].supportedTemplates }}
     </p>
 
     <div
@@ -209,22 +217,21 @@ function scrollCarousel(dir: -1 | 1): void {
               :thumbnail="true"
             />
           </div>
-          <span class="jb-thumb-caption">First-page preview</span>
+          <span class="jb-thumb-caption">{{ t[locale].firstPagePreview }}</span>
         </button>
 
         <div class="jb-card-info">
           <h3 class="jb-card-title">
             {{ tpl.name }}
-            <span class="jb-new-badge">New</span>
+            <span v-if="tpl.hasNewBadge" class="jb-new-badge">New</span>
           </h3>
           <p class="jb-card-sub">
-            {{ tpl.category === 'scenic' ? 'Scenic' : tpl.category === 'backdrop' ? 'Backdrop' : 'Basic' }}
-            · {{ getCardColorName(tpl) }}
+            {{ tpl.tier }} · {{ getCardColorName(tpl) }}
           </p>
 
           <div class="jb-colors" role="group" :aria-label="`${tpl.name} colors`">
             <button
-              v-for="pal in CV_PALETTES.slice(0, 8)"
+              v-for="pal in getCardSwatches(tpl)"
               :key="`${tpl.id}-${pal.id}`"
               type="button"
               class="jb-color-dot"
@@ -246,7 +253,7 @@ function scrollCarousel(dir: -1 | 1): void {
             :data-testid="`tpl-${tpl.id}`"
             @click="chooseCardTemplate(tpl)"
           >
-            {{ selectedTemplateId === tpl.id ? `✓ Selected (${tpl.name})` : actionLabel }}
+            {{ selectedTemplateId === tpl.id ? `✓ ${t[locale].selectedLabel} (${tpl.name})` : actionLabel }}
           </button>
         </div>
       </article>

@@ -35,31 +35,38 @@ const canSubmit = computed(() => {
 
 const heroTemplate = CV_TEMPLATES[0]!
 
+const previewModalTemplate = ref<CvTemplateOption | null>(null)
+const previewModalHex = ref<string>(heroTemplate.defaultColor)
+
+const selectedTemplateObj = computed(
+  () => CV_TEMPLATES.find((tpl) => tpl.id === store.selectedTemplateId) ?? heroTemplate,
+)
+
 const sampleShowcaseCv: StructuredCv = {
-  fullName: 'SUM CHHEY',
-  jobTitle: 'Front-End Developer',
-  email: 'chhey@example.com',
-  phone: '+855 12 345 678',
+  fullName: 'NGOYTRY LYHUOR',
+  jobTitle: 'Senior UI & Frontend Engineer',
+  email: 'ngoytry.lyhuor@demo-cv.kh',
+  phone: '+855 12 889 412',
   location: 'Phnom Penh, Cambodia',
   summary:
-    'Front-end developer building accessible, responsive web applications with Vue, Laravel, and TypeScript for Cambodian fintech and enterprise teams.',
+    'Product-focused frontend engineer crafting accessible, high-performance web applications with Vue 3, Laravel, and TypeScript for modern fintech and enterprise teams.',
   experience: [
     {
-      role: 'Front-End Developer',
-      company: 'Mekong Digital Studio',
+      role: 'Senior Frontend Engineer',
+      company: 'Chaktomuk Tech Labs',
       period: '2024 – Present',
       bullets: [
-        'Built responsive booking and recruitment web applications with Vue 3.',
-        'Introduced reusable design system components and automated QA tests.',
+        'Architected responsive recruitment and analytics dashboards with Vue 3 and TypeScript.',
+        'Established a shared component library and automated end-to-end Playwright QA.',
       ],
     },
     {
-      role: 'Junior Web Developer',
-      company: 'Lotus Web Lab',
+      role: 'Frontend Developer',
+      company: 'Tonle Digital Co.',
       period: '2022 – 2024',
       bullets: [
-        'Delivered mobile-friendly portals for Cambodian SMEs and NGOs.',
-        'Improved form validation, accessibility, and API error handling.',
+        'Delivered mobile-first portals and multilingual workflows for local SMEs.',
+        'Improved Core Web Vitals, accessibility semantics, and API error resilience.',
       ],
     },
   ],
@@ -70,8 +77,8 @@ const sampleShowcaseCv: StructuredCv = {
       period: '2018 – 2022',
     },
   ],
-  skills: ['Vue / Nuxt', 'TypeScript', 'HTML / CSS', 'Laravel', 'REST API', 'Git'],
-  languages: ['Khmer — Native', 'English — Professional'],
+  skills: ['Vue 3 / Nuxt', 'TypeScript', 'HTML / CSS', 'Laravel', 'REST API', 'Playwright'],
+  languages: ['Khmer — Native', 'English — Fluent'],
 }
 
 function onExtracted(text: string): void {
@@ -100,8 +107,30 @@ function scrollToBuilder(): void {
   document.getElementById('cv-builder-box')?.scrollIntoView({ behavior: 'smooth' })
 }
 
+function scrollToDesigns(): void {
+  document.getElementById('cv-designs')?.scrollIntoView({ behavior: 'smooth' })
+}
+
 function onHomeSelectTemplate(tpl: CvTemplateOption, hex: string): void {
   store.setDesignChoice(tpl.id, hex)
+  scrollToBuilder()
+}
+
+function onHomeColorChange(tpl: CvTemplateOption, hex: string): void {
+  store.setDesignChoice(tpl.id, hex)
+}
+
+function onHomePreviewTemplate(tpl: CvTemplateOption, hex: string): void {
+  store.setDesignChoice(tpl.id, hex)
+  previewModalTemplate.value = tpl
+  previewModalHex.value = hex
+}
+
+function applyModalTemplate(): void {
+  if (previewModalTemplate.value) {
+    store.setDesignChoice(previewModalTemplate.value.id, previewModalHex.value)
+  }
+  previewModalTemplate.value = null
   scrollToBuilder()
 }
 
@@ -146,7 +175,7 @@ async function onSubmit(): Promise<void> {
     <!-- Jobify-style Deep Navy Hero Banner + Live Preview Card -->
     <section class="jobify-hero">
       <div class="jobify-hero-copy">
-        <span class="jobify-pill">{{ t[locale].freeBadge }} • Built for Cambodian Job Seekers</span>
+        <span class="jobify-pill">{{ t[locale].heroPill }}</span>
         <h1>{{ t[locale].heroTitle }}</h1>
         <p class="jobify-hero-sub">{{ t[locale].heroSubtitle }}</p>
 
@@ -155,9 +184,15 @@ async function onSubmit(): Promise<void> {
             {{ t[locale].submitBtn }}
             <ArrowRight class="icon-sm" aria-hidden="true" />
           </button>
-          <RouterLink to="/sample" class="btn btn--ghost-white" data-testid="sample-link">
-            {{ t[locale].viewSample }}
-          </RouterLink>
+          <button type="button" class="btn btn--ghost-white" @click="scrollToDesigns">
+            {{ t[locale].heroBrowseBtn }}
+          </button>
+        </div>
+
+        <div class="hero-trust-row">
+          <span class="hero-trust-item">{{ t[locale].heroTrust1 }}</span>
+          <span class="hero-trust-item">{{ t[locale].heroTrust2 }}</span>
+          <span class="hero-trust-item">{{ t[locale].heroTrust3 }}</span>
         </div>
       </div>
 
@@ -170,13 +205,29 @@ async function onSubmit(): Promise<void> {
             :accent-hex="heroTemplate.defaultColor"
             :thumbnail="true"
           />
-          <span class="hero-live-a4-caption">Sample CV · fictional content · First-page preview</span>
+          <span class="hero-live-a4-caption">{{ t[locale].heroPreviewCaption }}</span>
         </div>
       </div>
     </section>
 
     <!-- Upload / Paste CV Form Card -->
     <form id="cv-builder-box" class="form-card" @submit.prevent="onSubmit">
+      <div class="builder-top-bar">
+        <div>
+          <span class="eyebrow">{{ t[locale].builderEyebrow }}</span>
+          <h2 class="builder-heading">{{ t[locale].builderHeading }}</h2>
+        </div>
+        <button type="button" class="selected-tpl-pill" @click="scrollToDesigns">
+          <span
+            class="selected-tpl-dot"
+            :style="{ backgroundColor: store.selectedPaletteHex }"
+            aria-hidden="true"
+          />
+          <span>{{ selectedTemplateObj.name }}</span>
+          <span class="selected-tpl-change">{{ t[locale].changeBtn }}</span>
+        </button>
+      </div>
+
       <div class="segmented" role="tablist" aria-label="CV input method">
         <button
           type="button"
@@ -296,51 +347,51 @@ async function onSubmit(): Promise<void> {
 
     <!-- Three Simple Steps (Jobify-style) -->
     <section class="section-card">
-      <span class="eyebrow">THREE SIMPLE STEPS</span>
-      <h2 class="section-title">From your messy CV to your next opportunity</h2>
+      <span class="eyebrow">{{ t[locale].stepsEyebrow }}</span>
+      <h2 class="section-title">{{ t[locale].stepsTitle }}</h2>
       <div class="steps-grid">
         <div class="step-item">
           <span class="step-num">1</span>
-          <h3>Upload or Paste CV</h3>
-          <p>Drop your PDF, Word, or raw text—files stay private in your browser.</p>
+          <h3>{{ t[locale].step1Title }}</h3>
+          <p>{{ t[locale].step1Desc }}</p>
         </div>
         <div class="step-item">
           <span class="step-num">2</span>
-          <h3>Pick Your Design &amp; Color</h3>
-          <p>AI organizes your CV into clean English sections across 41 templates.</p>
+          <h3>{{ t[locale].step2Title }}</h3>
+          <p>{{ t[locale].step2Desc }}</p>
         </div>
         <div class="step-item">
           <span class="step-num">3</span>
-          <h3>Preview &amp; Download PDF</h3>
-          <p>Check the A4 preview, edit any line if needed, and save your PDF free.</p>
+          <h3>{{ t[locale].step3Title }}</h3>
+          <p>{{ t[locale].step3Desc }}</p>
         </div>
       </div>
     </section>
 
     <!-- Why AI CV Checker? 4 Feature Cards -->
     <section class="section-card">
-      <span class="eyebrow">YOUR EXPERIENCE, WELL PRESENTED</span>
-      <h2 class="section-title">Why MY CV BUILDER?</h2>
+      <span class="eyebrow">{{ t[locale].whyEyebrow }}</span>
+      <h2 class="section-title">{{ t[locale].whyTitle }}</h2>
       <div class="why-grid" style="margin-bottom: 1.5rem">
         <div class="why-card">
           <Sparkles class="icon-md" aria-hidden="true" />
-          <h3>41 Templates</h3>
-          <p>Classic, Modern, Angkor &amp; Scenic, and Photo Backdrop styles.</p>
+          <h3>{{ t[locale].why1Title }}</h3>
+          <p>{{ t[locale].why1Desc }}</p>
         </div>
         <div class="why-card">
           <FileText class="icon-md" aria-hidden="true" />
-          <h3>AI Section Builder</h3>
-          <p>Turns Khmer or rough English into clean professional bullet points.</p>
+          <h3>{{ t[locale].why2Title }}</h3>
+          <p>{{ t[locale].why2Desc }}</p>
         </div>
         <div class="why-card">
           <Palette class="icon-md" aria-hidden="true" />
-          <h3>Exact Color Palettes</h3>
-          <p>Switch Slate, Navy, Emerald, Burgundy, or Gold while keeping your content.</p>
+          <h3>{{ t[locale].why3Title }}</h3>
+          <p>{{ t[locale].why3Desc }}</p>
         </div>
         <div class="why-card">
           <CheckCircle2 class="icon-md" aria-hidden="true" />
-          <h3>A4 Preview &amp; PDF</h3>
-          <p>Inspect the full A4 layout on phone or desktop before downloading.</p>
+          <h3>{{ t[locale].why4Title }}</h3>
+          <p>{{ t[locale].why4Desc }}</p>
         </div>
       </div>
 
@@ -349,10 +400,69 @@ async function onSubmit(): Promise<void> {
         :selected-template-id="store.selectedTemplateId"
         :selected-palette-hex="store.selectedPaletteHex"
         :photo-url="store.profilePhotoUrl"
-        action-label="Create with this template"
+        :action-label="t[locale].createWithTemplate"
         @select="onHomeSelectTemplate"
-        @preview="onHomeSelectTemplate"
+        @color="onHomeColorChange"
+        @preview="onHomePreviewTemplate"
       />
     </section>
+
+    <!-- Full-Size Template Preview Modal -->
+    <div
+      v-if="previewModalTemplate"
+      class="home-preview-backdrop"
+      role="dialog"
+      aria-modal="true"
+      :aria-label="`Preview ${previewModalTemplate.name}`"
+      @click.self="previewModalTemplate = null"
+    >
+      <div class="home-preview-modal">
+        <div class="home-preview-head">
+          <div>
+            <h3>{{ previewModalTemplate.name }}</h3>
+            <p>{{ previewModalTemplate.tier }} · {{ t[locale].firstPagePreview }}</p>
+          </div>
+          <div class="home-preview-head-actions">
+            <div v-if="previewModalTemplate.swatches.length" class="home-modal-swatches">
+              <button
+                v-for="sw in previewModalTemplate.swatches"
+                :key="sw.hex"
+                type="button"
+                class="jb-color-dot"
+                :class="{
+                  'jb-color-dot--active': previewModalHex.toLowerCase() === sw.hex.toLowerCase(),
+                }"
+                :style="{ backgroundColor: sw.hex }"
+                :title="sw.name"
+                :aria-label="`${previewModalTemplate.name} · ${sw.name}`"
+                @click="previewModalHex = sw.hex"
+              />
+            </div>
+            <button type="button" class="btn btn--primary btn--sm" @click="applyModalTemplate">
+              {{ t[locale].useTemplateBtn }}
+              <ArrowRight class="icon-sm" aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              class="btn btn--secondary btn--sm"
+              aria-label="Close preview"
+              @click="previewModalTemplate = null"
+            >
+              <X class="icon-sm" aria-hidden="true" />
+            </button>
+          </div>
+        </div>
+        <div class="home-preview-body">
+          <div class="home-preview-sheet-wrap">
+            <CvTemplatePreview
+              :cv="sampleShowcaseCv"
+              :template="previewModalTemplate"
+              :accent-hex="previewModalHex"
+              :exact-sample="true"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>

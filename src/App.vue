@@ -10,6 +10,7 @@ const { locale, t, toggleLocale } = useI18n()
     <header class="topbar no-print">
       <div class="topbar-inner">
         <RouterLink to="/" class="brand">
+          <span class="brand-dot" aria-hidden="true" />
           {{ t[locale].brand }}
         </RouterLink>
 
@@ -24,6 +25,9 @@ const { locale, t, toggleLocale } = useI18n()
         </button>
 
         <nav class="nav-links" aria-label="Main navigation">
+          <RouterLink to="/#cv-designs" class="nav-link">
+            {{ t[locale].navTemplates }}
+          </RouterLink>
           <RouterLink to="/sample" class="nav-link" data-testid="nav-sample">
             {{ t[locale].navSample }}
           </RouterLink>
@@ -39,35 +43,50 @@ const { locale, t, toggleLocale } = useI18n()
     </main>
 
     <footer class="footer no-print" data-testid="site-footer">
-      <div class="footer-grid">
-        <div class="footer-col">
-          <strong class="footer-brand">MY CV BUILDER</strong>
-          <p class="footer-desc">
-            Built for Cambodian job seekers. Turn any messy CV into a clean, professional English resume across 41 templates — 100% Free v1.
-          </p>
-        </div>
+      <div class="footer-inner-wrap">
+        <div class="footer-grid">
+          <div class="footer-col footer-col--brand">
+            <div class="footer-brand-row">
+              <span class="brand-dot" aria-hidden="true" />
+              <strong class="footer-brand">{{ t[locale].brand }}</strong>
+            </div>
+            <p class="footer-desc">
+              {{ t[locale].footerTagline }}
+            </p>
+            <span class="footer-trust-pill">{{ t[locale].footerTrust }}</span>
+          </div>
 
-        <div class="footer-col">
-          <strong class="footer-heading">Navigation</strong>
-          <div class="footer-links-col">
-            <RouterLink to="/">Home</RouterLink>
-            <RouterLink to="/sample">Sample &amp; 41 Templates</RouterLink>
-            <RouterLink to="/privacy">Privacy Policy</RouterLink>
-            <RouterLink to="/terms">Terms and Conditions</RouterLink>
+          <div class="footer-col">
+            <strong class="footer-heading">{{ t[locale].footerNavTitle }}</strong>
+            <div class="footer-links-col">
+              <RouterLink to="/">{{ t[locale].footerHome }}</RouterLink>
+              <RouterLink to="/#cv-designs">{{ t[locale].navTemplates }}</RouterLink>
+              <RouterLink to="/sample">{{ t[locale].footerSample }}</RouterLink>
+              <RouterLink to="/privacy">{{ t[locale].footerPrivacy }}</RouterLink>
+              <RouterLink to="/terms">{{ t[locale].footerTerms }}</RouterLink>
+            </div>
+          </div>
+
+          <div class="footer-col">
+            <strong class="footer-heading">{{ t[locale].footerSupportTitle }}</strong>
+            <p class="footer-desc">
+              {{ t[locale].footerLocation }}<br>
+              {{ t[locale].footerPrivacyNote }}
+            </p>
           </div>
         </div>
 
-        <div class="footer-col">
-          <strong class="footer-heading">Privacy &amp; Support</strong>
-          <p class="footer-desc">
-            Phnom Penh, Cambodia<br>
-            Files stay in your browser · Auto-deleted after 7 days
-          </p>
+        <div class="footer-bottom">
+          <span>{{ t[locale].footerCopyright }}</span>
+          <button
+            type="button"
+            class="footer-lang-btn"
+            @click="toggleLocale"
+          >
+            <Languages class="icon-sm" aria-hidden="true" />
+            {{ locale === 'en' ? 'ភាសាខ្មែរ (KM)' : 'English (EN)' }}
+          </button>
         </div>
-      </div>
-
-      <div class="footer-bottom">
-        <span>© 2026 MY CV BUILDER. All Rights Reserved.</span>
       </div>
     </footer>
   </div>

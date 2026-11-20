@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from 'vue'
-import type { CvTemplateOption } from '@/config/cvTemplates'
+import { getJobifyTemplateHtml, type CvTemplateOption } from '@/config/cvTemplates'
+import { hydrateJobifyTemplate } from '@/utils/hydrateJobifyTemplate'
 import type { StructuredCv } from '@/types/check'
 
 const props = withDefaults(
@@ -10,10 +11,12 @@ const props = withDefaults(
     accentHex: string
     photoUrl?: string | null
     thumbnail?: boolean
+    exactSample?: boolean
   }>(),
   {
     photoUrl: null,
     thumbnail: false,
+    exactSample: false,
   },
 )
 
@@ -48,6 +51,13 @@ const initials = computed(() => {
   return `${parts[0]![0] ?? ''}${parts[parts.length - 1]![0] ?? ''}`.toUpperCase()
 })
 
+const exactTemplateHtml = computed(() => {
+  const raw = getJobifyTemplateHtml(props.template.id, props.accentHex)
+  if (!raw) return null
+  if (props.thumbnail || props.exactSample) return raw
+  return hydrateJobifyTemplate(raw, props.cv, props.photoUrl)
+})
+
 const isSplitSidebar = computed(() =>
   [
     'sidebar-left-dark',
@@ -69,7 +79,16 @@ const isClassicNavy = computed(() => props.template.id === 'phnom-penh-classic')
     :class="{ 'a4-scale-wrapper--thumb': thumbnail }"
     :style="{ height: `${Math.round(1123 * scale)}px` }"
   >
+    <div
+      v-if="exactTemplateHtml"
+      class="cv-document donor-scope a4-exact-donor"
+      :class="[`a4-layout--${template.layout}`, `a4-tpl--${template.id}`]"
+      :style="{ transform: `scale(${scale})`, transformOrigin: 'top left' }"
+      :data-testid="thumbnail ? 'cv-template-thumb' : 'cv-template-sheet'"
+      v-html="exactTemplateHtml"
+    />
     <article
+      v-else
       class="a4-page"
       :class="[
         `a4-layout--${template.layout}`,

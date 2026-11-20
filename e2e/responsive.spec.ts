@@ -17,12 +17,12 @@ const SAMPLE_RESPONSE = {
     strengths: ['Clear layout', 'Quantified results', 'Relevant education'],
     weaknesses: ['Generic summary', 'Passive verbs', 'Missing skills grouping'],
     suggestions: ['Add target title', 'Use action verbs', 'Group skills'],
-    improved_cv: 'SOKHA CHAN\nIT Support & Junior Developer\nPhnom Penh, Cambodia',
+    improved_cv: 'NGOYTRY LYHUOR\nIT Support & Junior Developer\nPhnom Penh, Cambodia',
     translated_cv: '',
     structured_cv: {
-      full_name: 'Sokha Chan',
+      full_name: 'NGOYTRY LYHUOR',
       job_title: 'IT Support & Junior Developer',
-      email: 'sokha.chan@example.com',
+      email: 'ngoytry.lyhuor@demo-cv.kh',
       phone: '+855 12 345 678',
       location: 'Phnom Penh, Cambodia',
       summary: 'Detail-oriented IT graduate with 1+ year experience in support and Laravel.',
@@ -92,9 +92,9 @@ for (const vp of VIEWPORTS) {
         if (path === '/sample') {
           await expect(page.getByTestId('cv-template-sheet')).toBeVisible()
           await expect(page.getByTestId('cv-avatar-slot')).toBeVisible()
-          await page.getByTestId('cat-scenic').click()
-          await page.getByTestId('tpl-scenic-angkor-gold').click()
-          await expect(page.getByTestId('cv-template-sheet')).toHaveClass(/a4-layout--scenic-header/)
+          await page.getByTestId('cat-backdrop').click()
+          await page.getByTestId('tpl-backdrop-c').click()
+          await expect(page.getByTestId('cv-template-sheet')).toHaveClass(/a4-layout--faded-backdrop/)
 
           await page.getByTestId('preview-pdf-btn').click()
           await expect(page.getByTestId('pdf-preview-modal')).toBeVisible()
@@ -111,6 +111,11 @@ for (const vp of VIEWPORTS) {
           () => document.documentElement.scrollWidth > window.innerWidth,
         )
         expect(overflowKm, `Horizontal overflow on ${path} (KM)`).toBe(false)
+        if (path === '/privacy') {
+          await expect(page.locator('h1')).toContainText('គោលការណ៍ឯកជនភាព')
+        } else if (path === '/terms') {
+          await expect(page.locator('h1')).toContainText('លក្ខខណ្ឌប្រើប្រាស់')
+        }
         await page.getByTestId('lang-toggle').click()
       }
 

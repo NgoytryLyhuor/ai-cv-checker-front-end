@@ -116,6 +116,40 @@ function printReport(): void {
     window.print()
   }, 60)
 }
+
+const SCORE_LABEL_KM: Record<string, string> = {
+  'Needs work': 'ត្រូវការកែលម្អ',
+  Fair: 'មធ្យម',
+  Good: 'ល្អ',
+  Excellent: 'ល្អប្រសើរ',
+  Reviewed: 'បានពិនិត្យ',
+}
+
+const activeScoreLabel = computed(() => {
+  const raw = props.result.label ?? 'Reviewed'
+  if (locale.value === 'km') {
+    return SCORE_LABEL_KM[raw] ?? raw
+  }
+  return raw
+})
+
+const activeStrengths = computed(() =>
+  locale.value === 'km' && props.result.strengthsKm?.length
+    ? props.result.strengthsKm
+    : props.result.strengths,
+)
+
+const activeWeaknesses = computed(() =>
+  locale.value === 'km' && props.result.weaknessesKm?.length
+    ? props.result.weaknessesKm
+    : props.result.weaknesses,
+)
+
+const activeSuggestions = computed(() =>
+  locale.value === 'km' && props.result.suggestionsKm?.length
+    ? props.result.suggestionsKm
+    : props.result.suggestions,
+)
 </script>
 
 <template>
@@ -128,12 +162,12 @@ function printReport(): void {
       <div class="score-strip-left">
         <div class="score-box score-box--sm" :class="scoreBadgeClass" data-testid="score-badge">
           <span class="score-number">{{ result.score ?? 0 }}/100</span>
-          <span class="score-label">{{ result.label ?? 'Reviewed' }}</span>
+          <span class="score-label">{{ activeScoreLabel }}</span>
         </div>
         <div>
           <span class="eyebrow">
             <Sparkles class="icon-sm" aria-hidden="true" />
-            English CV Ready
+            {{ locale === 'km' ? 'CV អង់គ្លេសរួចរាល់' : 'English CV Ready' }}
           </span>
           <h2 class="report-title">{{ editableCv.fullName || 'CV Builder' }}</h2>
         </div>
@@ -155,19 +189,19 @@ function printReport(): void {
       <div class="feedback-panel">
         <h3>{{ t[locale].strengths }}</h3>
         <ul>
-          <li v-for="(item, idx) in result.strengths" :key="`s-${idx}`">{{ item }}</li>
+          <li v-for="(item, idx) in activeStrengths" :key="`s-${idx}`">{{ item }}</li>
         </ul>
       </div>
       <div class="feedback-panel">
         <h3>{{ t[locale].weaknesses }}</h3>
         <ul>
-          <li v-for="(item, idx) in result.weaknesses" :key="`w-${idx}`">{{ item }}</li>
+          <li v-for="(item, idx) in activeWeaknesses" :key="`w-${idx}`">{{ item }}</li>
         </ul>
       </div>
       <div class="feedback-panel">
         <h3>{{ t[locale].suggestions }}</h3>
         <ul>
-          <li v-for="(item, idx) in result.suggestions" :key="`g-${idx}`">{{ item }}</li>
+          <li v-for="(item, idx) in activeSuggestions" :key="`g-${idx}`">{{ item }}</li>
         </ul>
       </div>
     </div>
@@ -181,6 +215,7 @@ function printReport(): void {
         :photo-url="photoUrl"
         action-label="Use this template"
         @select="onGallerySelect"
+        @color="onGallerySelect"
         @preview="onGalleryPreview"
       />
 

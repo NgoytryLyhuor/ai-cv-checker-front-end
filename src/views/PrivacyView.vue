@@ -1,14 +1,20 @@
+<script setup lang="ts">
+import { useI18n } from '@/composables/useI18n'
+
+const { locale, t } = useI18n()
+</script>
+
 <template>
   <article class="form-card prose">
-    <h1>Privacy Policy</h1>
+    <h1>{{ t[locale].privacyTitle }}</h1>
     <p>
-      <strong>1. No File Storage:</strong> Your PDF or DOCX file is read directly inside your browser. The original file is never uploaded or saved to our server.
+      <strong>{{ t[locale].privacy1Title }}</strong> {{ t[locale].privacy1Body }}
     </p>
     <p>
-      <strong>2. AI Processing:</strong> Only the extracted text is sent over HTTPS to our backend and forwarded to Google Gemini API to generate your score, feedback, and translation.
+      <strong>{{ t[locale].privacy2Title }}</strong> {{ t[locale].privacy2Body }}
     </p>
     <p>
-      <strong>3. Automatic 7-Day Deletion:</strong> Your CV text, optional email, and generated report are encrypted at rest and permanently scrubbed after 7 days.
+      <strong>{{ t[locale].privacy3Title }}</strong> {{ t[locale].privacy3Body }}
     </p>
   </article>
 </template>

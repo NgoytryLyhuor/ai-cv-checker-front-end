@@ -1,3 +1,5 @@
+import rawJobifyTemplates from '@/data/jobifyTemplates.json'
+
 export type CvTemplateCategory = 'classic' | 'scenic' | 'backdrop'
 
 export type CvLayoutEngine =
@@ -12,12 +14,21 @@ export type CvLayoutEngine =
   | 'scenic-header'
   | 'faded-backdrop'
 
+export interface CvSwatchOption {
+  name: string
+  hex: string
+}
+
 export interface CvTemplateOption {
   id: string
+  designId: string
   name: string
   category: CvTemplateCategory
+  tier: 'Basic' | 'Premium'
+  hasNewBadge: boolean
   layout: CvLayoutEngine
   defaultColor: string
+  swatches: CvSwatchOption[]
   supportsPhoto: boolean
   serif?: boolean
 }
@@ -43,51 +54,115 @@ export const CV_PALETTES: CvPaletteOption[] = [
   { id: 'color-d97706', name: 'Royal Gold', hex: '#d97706' },
 ]
 
-export const CV_TEMPLATES: CvTemplateOption[] = [
-  // Classic & Modern (27)
-  { id: 'slate-portrait', name: 'Slate Portrait', category: 'classic', layout: 'sidebar-left-dark', defaultColor: '#3b4757', supportsPhoto: true },
-  { id: 'graphite-frame', name: 'Graphite Frame', category: 'classic', layout: 'framed-border', defaultColor: '#334155', supportsPhoto: false },
-  { id: 'navy-ribbon', name: 'Navy Ribbon', category: 'classic', layout: 'ribbon-banner', defaultColor: '#1e3a5f', supportsPhoto: true },
-  { id: 'sand-profile', name: 'Sand Profile', category: 'classic', layout: 'sidebar-right-tint', defaultColor: '#78350f', supportsPhoto: true },
-  { id: 'phnom-penh-classic', name: 'Phnom Penh Classic', category: 'classic', layout: 'ats-classic', defaultColor: '#1e293b', supportsPhoto: false, serif: true },
-  { id: 'two-tone-corner', name: 'Two-Tone Corner', category: 'classic', layout: 'two-tone-diagonal', defaultColor: '#0f766e', supportsPhoto: true },
-  { id: 'blue-angle-header', name: 'Blue Angle Header', category: 'classic', layout: 'ribbon-banner', defaultColor: '#1d4ed8', supportsPhoto: true },
-  { id: 'tech-grid', name: 'Tech Grid', category: 'classic', layout: 'timeline-dots', defaultColor: '#0284c7', supportsPhoto: false },
-  { id: 'royal-gold', name: 'Royal Gold', category: 'classic', layout: 'minimal-accent', defaultColor: '#d97706', supportsPhoto: false },
-  { id: 'burgundy-elegance', name: 'Burgundy Elegance', category: 'classic', layout: 'minimal-accent', defaultColor: '#881337', supportsPhoto: false, serif: true },
-  { id: 'diagonal-slate', name: 'Diagonal Slate', category: 'classic', layout: 'two-tone-diagonal', defaultColor: '#3b4757', supportsPhoto: true },
-  { id: 'midnight-card', name: 'Midnight Card', category: 'classic', layout: 'sidebar-left-dark', defaultColor: '#0f172a', supportsPhoto: true },
-  { id: 'coral-accent', name: 'Coral Accent', category: 'classic', layout: 'minimal-accent', defaultColor: '#e8735a', supportsPhoto: false },
-  { id: 'ocean-wave', name: 'Ocean Wave', category: 'classic', layout: 'two-tone-diagonal', defaultColor: '#0891b2', supportsPhoto: true },
-  { id: 'lavender-soft', name: 'Lavender Soft', category: 'classic', layout: 'minimal-accent', defaultColor: '#4b3b78', supportsPhoto: false },
-  { id: 'harvard-standard', name: 'Harvard Standard', category: 'classic', layout: 'ats-classic', defaultColor: '#111827', supportsPhoto: false, serif: true },
-  { id: 'modern-sans', name: 'Modern Sans', category: 'classic', layout: 'ats-classic', defaultColor: '#0f172a', supportsPhoto: false },
-  { id: 'executive-formal', name: 'Executive Formal', category: 'classic', layout: 'framed-border', defaultColor: '#1e293b', supportsPhoto: false, serif: true },
-  { id: 'classic-navy-banner', name: 'Classic Navy Banner', category: 'classic', layout: 'ribbon-banner', defaultColor: '#1e3a5f', supportsPhoto: true },
-  { id: 'vintage-stone-frame', name: 'Vintage Stone Frame', category: 'classic', layout: 'framed-border', defaultColor: '#3a352f', supportsPhoto: false, serif: true },
-  { id: 'slate-split-sidebar', name: 'Slate Split Sidebar', category: 'classic', layout: 'sidebar-left-dark', defaultColor: '#475569', supportsPhoto: true },
-  { id: 'emerald-gold-timeline', name: 'Emerald Gold Timeline', category: 'classic', layout: 'timeline-dots', defaultColor: '#064e3b', supportsPhoto: false },
-  { id: 'golden-minimalist', name: 'Golden Minimalist', category: 'classic', layout: 'minimal-accent', defaultColor: '#d97706', supportsPhoto: false },
-  { id: 'nature-forest-sidebar', name: 'Nature Forest Sidebar', category: 'classic', layout: 'sidebar-left-dark', defaultColor: '#1b4332', supportsPhoto: true },
-  { id: 'cyan-double-border', name: 'Cyan Double Border', category: 'classic', layout: 'framed-border', defaultColor: '#0891b2', supportsPhoto: false },
-  { id: 'royal-blue-timeline', name: 'Royal Blue Timeline', category: 'classic', layout: 'timeline-dots', defaultColor: '#1d4ed8', supportsPhoto: false },
-  { id: 'sage-green-sidebar', name: 'Sage Green Sidebar', category: 'classic', layout: 'sidebar-left-dark', defaultColor: '#67917f', supportsPhoto: true },
+interface RawJobifyTemplate {
+  id: string
+  designId: string
+  name: string
+  category: CvTemplateCategory
+  tier: 'Basic' | 'Premium'
+  hasNewBadge: boolean
+  defaultColor: string
+  swatches: CvSwatchOption[]
+  html: string
+}
 
-  // Angkor & Scenic (7)
-  { id: 'scenic-angkor-blue', name: 'Angkor Blue Horizon', category: 'scenic', layout: 'scenic-header', defaultColor: '#1d4ed8', supportsPhoto: true },
-  { id: 'scenic-angkor-gold', name: 'Angkor Golden Temple', category: 'scenic', layout: 'scenic-header', defaultColor: '#d97706', supportsPhoto: true },
-  { id: 'scenic-angkor-jungle', name: 'Angkor Jungle Ruins', category: 'scenic', layout: 'scenic-header', defaultColor: '#15803d', supportsPhoto: true },
-  { id: 'scenic-angkor-burgundy', name: 'Angkor Burgundy Stone', category: 'scenic', layout: 'scenic-header', defaultColor: '#9f1239', supportsPhoto: true },
-  { id: 'scenic-angkor-charcoal', name: 'Angkor Charcoal Ruins', category: 'scenic', layout: 'scenic-header', defaultColor: '#1f2937', supportsPhoto: true },
-  { id: 'scenic-angkor-emerald', name: 'Angkor Emerald Canopy', category: 'scenic', layout: 'scenic-header', defaultColor: '#047857', supportsPhoto: true },
-  { id: 'scenic-angkor-roots', name: 'Angkor Ancient Roots', category: 'scenic', layout: 'scenic-header', defaultColor: '#78350f', supportsPhoto: true },
+const LAYOUT_BY_ID: Record<string, CvLayoutEngine> = {
+  'slate-portrait': 'sidebar-left-dark',
+  'graphite-frame': 'framed-border',
+  'navy-ribbon': 'ribbon-banner',
+  'sand-profile': 'sidebar-right-tint',
+  'phnom-penh-classic': 'ats-classic',
+  'two-tone-corner': 'two-tone-diagonal',
+  'blue-angle-header': 'ribbon-banner',
+  'khmer-bilingual': 'sidebar-left-dark',
+  'tech-grid': 'timeline-dots',
+  'royal-gold': 'minimal-accent',
+  'burgundy-elegance': 'minimal-accent',
+  'diagonal-slate': 'two-tone-diagonal',
+  'midnight-card': 'sidebar-left-dark',
+  'coral-accent': 'minimal-accent',
+  'ocean-wave': 'two-tone-diagonal',
+  'lavender-soft': 'minimal-accent',
+  'ats-classic': 'ats-classic',
+  'ats-modern': 'ats-classic',
+  b: 'ribbon-banner',
+  c: 'framed-border',
+  d: 'sidebar-left-dark',
+  e: 'minimal-accent',
+  f: 'timeline-dots',
+  h: 'sidebar-left-dark',
+  k: 'timeline-dots',
+  l: 'sidebar-left-dark',
+  m: 'minimal-accent',
+  'black-badge': 'framed-border',
+  'sage-sidebar': 'sidebar-left-dark',
+  n: 'sidebar-left-dark',
+  q: 'minimal-accent',
+  r: 'ribbon-banner',
+  s: 'sidebar-left-dark',
+}
 
-  // Photo Backdrop (7)
-  { id: 'backdrop-blue', name: 'Faded Blue Backdrop', category: 'backdrop', layout: 'faded-backdrop', defaultColor: '#1d4ed8', supportsPhoto: true },
-  { id: 'backdrop-orange', name: 'Faded Orange Backdrop', category: 'backdrop', layout: 'faded-backdrop', defaultColor: '#ea580c', supportsPhoto: true },
-  { id: 'backdrop-peach', name: 'Faded Peach Backdrop', category: 'backdrop', layout: 'faded-backdrop', defaultColor: '#fb923c', supportsPhoto: true },
-  { id: 'backdrop-red', name: 'Faded Red Backdrop', category: 'backdrop', layout: 'faded-backdrop', defaultColor: '#dc2626', supportsPhoto: true },
-  { id: 'backdrop-crimson', name: 'Faded Crimson Backdrop', category: 'backdrop', layout: 'faded-backdrop', defaultColor: '#b91c1c', supportsPhoto: true },
-  { id: 'backdrop-gold', name: 'Faded Gold Backdrop', category: 'backdrop', layout: 'faded-backdrop', defaultColor: '#ca8a04', supportsPhoto: true },
-  { id: 'backdrop-green', name: 'Faded Green Backdrop', category: 'backdrop', layout: 'faded-backdrop', defaultColor: '#16a34a', supportsPhoto: true },
-]
+const SERIF_IDS = new Set([
+  'phnom-penh-classic',
+  'burgundy-elegance',
+  'ats-classic',
+  'c',
+  'q',
+])
+
+const typedRaw = rawJobifyTemplates as RawJobifyTemplate[]
+
+const HTML_MAP = new Map<string, string>(typedRaw.map((item) => [item.id, item.html]))
+
+export const CV_TEMPLATES: CvTemplateOption[] = typedRaw.map((item) => {
+  const layout: CvLayoutEngine =
+    item.category === 'scenic'
+      ? 'scenic-header'
+      : item.category === 'backdrop'
+        ? 'faded-backdrop'
+        : (LAYOUT_BY_ID[item.id] ?? 'minimal-accent')
+
+  return {
+    id: item.id,
+    designId: item.designId,
+    name: item.name,
+    category: item.category,
+    tier: item.tier,
+    hasNewBadge: item.hasNewBadge,
+    layout,
+    defaultColor: item.defaultColor,
+    swatches: item.swatches,
+    supportsPhoto: item.html.includes('<img') || item.category !== 'classic',
+    serif: SERIF_IDS.has(item.id),
+  }
+})
+
+function hexToRgbString(hex: string): string | null {
+  const clean = hex.replace('#', '').trim()
+  if (!/^[0-9a-fA-F]{6}$/.test(clean)) return null
+  const r = parseInt(clean.slice(0, 2), 16)
+  const g = parseInt(clean.slice(2, 4), 16)
+  const b = parseInt(clean.slice(4, 6), 16)
+  return `rgb(${r}, ${g}, ${b})`
+}
+
+function escapeRegExp(str: string): string {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
+export function getJobifyTemplateHtml(id: string, accentHex?: string): string | null {
+  const raw = HTML_MAP.get(id)
+  if (!raw) return null
+  const tpl = CV_TEMPLATES.find((t) => t.id === id)
+  if (!tpl || !accentHex || accentHex.toLowerCase() === tpl.defaultColor.toLowerCase()) {
+    return raw
+  }
+
+  let updated = raw.replace(new RegExp(escapeRegExp(tpl.defaultColor), 'gi'), accentHex)
+  const defaultRgb = hexToRgbString(tpl.defaultColor)
+  const targetRgb = hexToRgbString(accentHex)
+  if (defaultRgb && targetRgb) {
+    updated = updated.replace(new RegExp(escapeRegExp(defaultRgb), 'gi'), targetRgb)
+  }
+  return updated
+}
