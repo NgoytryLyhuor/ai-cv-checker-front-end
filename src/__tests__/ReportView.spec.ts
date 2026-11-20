@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { mount } from '@vue/test-utils'
+import { createPinia } from 'pinia'
 import ReportView from '@/components/ReportView.vue'
 import type { CheckResult } from '@/types/check'
 
@@ -39,8 +40,11 @@ describe('ReportView', () => {
     createdAt: '2026-11-20T06:30:00Z',
   }
 
-  it('renders structured English CV template and switches templates, colors, and plain text tab', async () => {
+  it('switches templates, edits CV details live, and opens/closes Preview PDF modal', async () => {
     const wrapper = mount(ReportView, {
+      global: {
+        plugins: [createPinia()],
+      },
       props: {
         result: sampleResult,
         originalText: 'Original CV text',
@@ -48,15 +52,19 @@ describe('ReportView', () => {
     })
 
     expect(wrapper.get('[data-testid="score-badge"]').text()).toContain('76/100')
-    expect(wrapper.get('[data-testid="cv-template-sheet"]').classes()).toContain('cv-tpl--slate-portrait')
+    expect(wrapper.get('[data-testid="cv-template-sheet"]').classes()).toContain('cv-layout--sidebar-left-dark')
 
     await wrapper.get('[data-testid="tpl-navy-ribbon"]').trigger('click')
-    expect(wrapper.get('[data-testid="cv-template-sheet"]').classes()).toContain('cv-tpl--navy-ribbon')
+    expect(wrapper.get('[data-testid="cv-template-sheet"]').classes()).toContain('cv-layout--ribbon-banner')
 
-    await wrapper.get('[data-testid="tab-text"]').trigger('click')
-    expect(wrapper.get('[data-testid="cv-output-text"]').text()).toBe('Improved CV body')
+    await wrapper.get('[data-testid="edit-cv-toggle"]').trigger('click')
+    await wrapper.get('[data-testid="edit-full-name"]').setValue('Dara Kim')
+    expect(wrapper.get('[data-testid="cv-template-sheet"]').text()).toContain('Dara Kim')
 
-    await wrapper.get('[data-testid="tab-original"]').trigger('click')
-    expect(wrapper.get('[data-testid="cv-output-text"]').text()).toBe('Original CV text')
+    await wrapper.get('[data-testid="preview-pdf-btn"]').trigger('click')
+    expect(wrapper.find('[data-testid="pdf-preview-modal"]').exists()).toBe(true)
+
+    await wrapper.get('[data-testid="close-preview-btn"]').trigger('click')
+    expect(wrapper.find('[data-testid="pdf-preview-modal"]').exists()).toBe(false)
   })
 })

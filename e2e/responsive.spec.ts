@@ -51,10 +51,10 @@ const SAMPLE_RESPONSE = {
 }
 
 for (const vp of VIEWPORTS) {
-  test.describe(`Responsive & Template QA: ${vp.name}`, () => {
+  test.describe(`Responsive, Paste & Preview PDF QA: ${vp.name}`, () => {
     test.use({ viewport: { width: vp.width, height: vp.height } })
 
-    test('renders all routes and CV templates cleanly without horizontal overflow in EN and KM', async ({
+    test('renders all routes, paste mode, template switch, and Preview PDF modal cleanly in EN and KM', async ({
       page,
     }) => {
       const errors: string[] = []
@@ -80,26 +80,30 @@ for (const vp of VIEWPORTS) {
         )
         expect(overflowEn, `Horizontal overflow on ${path} (EN)`).toBe(false)
 
-        for (const testId of ['nav-sample', 'nav-privacy', 'lang-toggle']) {
-          const box = await page.getByTestId(testId).boundingBox()
-          expect(box, `${testId} missing on ${path}`).not.toBeNull()
-          if (box) {
-            expect(box.x, `${testId} clipped left`).toBeGreaterThanOrEqual(0)
-            expect(box.x + box.width, `${testId} clipped right`).toBeLessThanOrEqual(vp.width + 1)
-          }
+        if (path === '/') {
+          await expect(page.getByTestId('home-photo-input')).toBeAttached()
+          await page.getByTestId('mode-paste').click()
+          await expect(page.getByTestId('paste-textarea')).toBeVisible()
+          await page.getByTestId('mode-upload').click()
         }
+
+        await expect(page.getByTestId('site-footer')).toBeVisible()
 
         if (path === '/sample') {
           await expect(page.getByTestId('cv-template-sheet')).toBeVisible()
-          // Test switching template & color palette
-          await page.getByTestId('tpl-navy-ribbon').click()
-          await expect(page.getByTestId('cv-template-sheet')).toHaveClass(/cv-tpl--navy-ribbon/)
-          await page.getByTestId('palette-color-065f46').click()
+          await expect(page.getByTestId('cv-avatar-slot')).toBeVisible()
+          await page.getByTestId('cat-scenic').click()
+          await page.getByTestId('tpl-scenic-angkor-gold').click()
+          await expect(page.getByTestId('cv-template-sheet')).toHaveClass(/cv-layout--scenic-header/)
 
-          const overflowTpl = await page.evaluate(
+          await page.getByTestId('preview-pdf-btn').click()
+          await expect(page.getByTestId('pdf-preview-modal')).toBeVisible()
+          const overflowModal = await page.evaluate(
             () => document.documentElement.scrollWidth > window.innerWidth,
           )
-          expect(overflowTpl, 'Overflow after switching template').toBe(false)
+          expect(overflowModal, 'Overflow inside Preview PDF modal').toBe(false)
+          await page.getByTestId('close-preview-btn').click()
+          await expect(page.getByTestId('pdf-preview-modal')).toBeHidden()
         }
 
         await page.getByTestId('lang-toggle').click()

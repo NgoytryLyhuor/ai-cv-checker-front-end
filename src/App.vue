@@ -38,13 +38,36 @@ const { locale, t, toggleLocale } = useI18n()
       <RouterView />
     </main>
 
-    <footer class="footer no-print">
-      <div class="footer-inner">
-        <span>AI CV Checker — Free v1</span>
-        <div class="footer-links">
-          <RouterLink to="/privacy">Privacy</RouterLink>
-          <RouterLink to="/terms">Terms</RouterLink>
+    <footer class="footer no-print" data-testid="site-footer">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <strong class="footer-brand">AI CV Checker</strong>
+          <p class="footer-desc">
+            Built for Cambodian job seekers. Turn any messy CV into a clean, professional English resume across 41 templates — 100% Free v1.
+          </p>
         </div>
+
+        <div class="footer-col">
+          <strong class="footer-heading">Navigation</strong>
+          <div class="footer-links-col">
+            <RouterLink to="/">Home</RouterLink>
+            <RouterLink to="/sample">Sample &amp; 41 Templates</RouterLink>
+            <RouterLink to="/privacy">Privacy Policy</RouterLink>
+            <RouterLink to="/terms">Terms and Conditions</RouterLink>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <strong class="footer-heading">Privacy &amp; Support</strong>
+          <p class="footer-desc">
+            Phnom Penh, Cambodia<br>
+            Files stay in your browser · Auto-deleted after 7 days
+          </p>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>© 2026 AI CV Checker. All Rights Reserved.</span>
       </div>
     </footer>
   </div>
