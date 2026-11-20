@@ -41,7 +41,7 @@ const { locale, t, toggleLocale } = useI18n()
     <footer class="footer no-print" data-testid="site-footer">
       <div class="footer-grid">
         <div class="footer-col">
-          <strong class="footer-brand">AI CV Checker</strong>
+          <strong class="footer-brand">MY CV BUILDER</strong>
           <p class="footer-desc">
             Built for Cambodian job seekers. Turn any messy CV into a clean, professional English resume across 41 templates — 100% Free v1.
           </p>
@@ -67,7 +67,7 @@ const { locale, t, toggleLocale } = useI18n()
       </div>
 
       <div class="footer-bottom">
-        <span>© 2026 AI CV Checker. All Rights Reserved.</span>
+        <span>© 2026 MY CV BUILDER. All Rights Reserved.</span>
       </div>
     </footer>
   </div>

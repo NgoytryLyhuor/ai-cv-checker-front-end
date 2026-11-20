@@ -52,10 +52,10 @@ describe('ReportView', () => {
     })
 
     expect(wrapper.get('[data-testid="score-badge"]').text()).toContain('76/100')
-    expect(wrapper.get('[data-testid="cv-template-sheet"]').classes()).toContain('cv-layout--sidebar-left-dark')
+    expect(wrapper.get('[data-testid="cv-template-sheet"]').classes()).toContain('a4-layout--sidebar-left-dark')
 
     await wrapper.get('[data-testid="tpl-navy-ribbon"]').trigger('click')
-    expect(wrapper.get('[data-testid="cv-template-sheet"]').classes()).toContain('cv-layout--ribbon-banner')
+    expect(wrapper.get('[data-testid="cv-template-sheet"]').classes()).toContain('a4-layout--ribbon-banner')
 
     await wrapper.get('[data-testid="edit-cv-toggle"]').trigger('click')
     await wrapper.get('[data-testid="edit-full-name"]').setValue('Dara Kim')

@@ -6,7 +6,7 @@ const locale = ref<Locale>('en')
 
 const messages = {
   en: {
-    brand: 'AI CV Checker',
+    brand: 'MY CV BUILDER',
     freeBadge: '100% Free',
     navSample: 'Sample & Templates',
     navPrivacy: 'Privacy',
@@ -50,7 +50,7 @@ const messages = {
     tryAnother: 'Build Another CV',
   },
   km: {
-    brand: 'AI CV Checker',
+    brand: 'MY CV BUILDER',
     freeBadge: 'ឥតគិតថ្លៃ ១០០%',
     navSample: 'គំរូ និង Template',
     navPrivacy: 'ឯកជនភាព',

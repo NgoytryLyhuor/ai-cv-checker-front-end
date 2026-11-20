@@ -4,11 +4,12 @@ import { useRouter } from 'vue-router'
 import axios from 'axios'
 import { ArrowRight, CheckCircle2, FileText, ImagePlus, Palette, Sparkles, X } from 'lucide-vue-next'
 import CvUploader from '@/components/CvUploader.vue'
+import CvTemplatePreview from '@/components/CvTemplatePreview.vue'
 import { createCheck } from '@/api/checks'
-import { CV_TEMPLATES } from '@/config/cvTemplates'
+import { CV_PALETTES, CV_TEMPLATES } from '@/config/cvTemplates'
 import { useCheckStore } from '@/stores/checkStore'
 import { useI18n } from '@/composables/useI18n'
-import type { CheckServiceType } from '@/types/check'
+import type { CheckServiceType, StructuredCv } from '@/types/check'
 
 const router = useRouter()
 const store = useCheckStore()
@@ -31,7 +32,47 @@ const canSubmit = computed(() => {
   return activeCvText.value.length >= 100 && consent.value && !isSubmitting.value
 })
 
-const showcaseTemplates = computed(() => CV_TEMPLATES.slice(0, 8))
+const showcaseTemplates = computed(() => CV_TEMPLATES.slice(0, 6))
+const heroTemplate = CV_TEMPLATES[0]!
+
+const sampleShowcaseCv: StructuredCv = {
+  fullName: 'SUM CHHEY',
+  jobTitle: 'Front-End Developer',
+  email: 'chhey@example.com',
+  phone: '+855 12 345 678',
+  location: 'Phnom Penh, Cambodia',
+  summary:
+    'Front-end developer building accessible, responsive web applications with Vue, Laravel, and TypeScript for Cambodian fintech and enterprise teams.',
+  experience: [
+    {
+      role: 'Front-End Developer',
+      company: 'Mekong Digital Studio',
+      period: '2024 – Present',
+      bullets: [
+        'Built responsive booking and recruitment web applications with Vue 3.',
+        'Introduced reusable design system components and automated QA tests.',
+      ],
+    },
+    {
+      role: 'Junior Web Developer',
+      company: 'Lotus Web Lab',
+      period: '2022 – 2024',
+      bullets: [
+        'Delivered mobile-friendly portals for Cambodian SMEs and NGOs.',
+        'Improved form validation, accessibility, and API error handling.',
+      ],
+    },
+  ],
+  education: [
+    {
+      degree: 'B.Sc. in Computer Science',
+      school: 'Royal University of Phnom Penh',
+      period: '2018 – 2022',
+    },
+  ],
+  skills: ['Vue / Nuxt', 'TypeScript', 'HTML / CSS', 'Laravel', 'REST API', 'Git'],
+  languages: ['Khmer — Native', 'English — Professional'],
+}
 
 function onExtracted(text: string): void {
   uploadedText.value = text
@@ -115,28 +156,17 @@ async function onSubmit(): Promise<void> {
         </div>
       </div>
 
-      <!-- Fictional Sample Preview Card (Desktop & Mobile) -->
-      <div class="jobify-hero-preview" aria-hidden="true">
-        <div class="mini-a4-card">
-          <div class="mini-a4-sidebar">
-            <div class="mini-avatar" />
-            <div class="mini-line mini-line--w80" />
-            <div class="mini-line mini-line--w60" />
-            <div class="mini-gap" />
-            <div class="mini-line mini-line--w70" />
-            <div class="mini-line mini-line--w50" />
-          </div>
-          <div class="mini-a4-main">
-            <div class="mini-badge">Slate Portrait · #3b4757</div>
-            <div class="mini-line-dark mini-line--w90" />
-            <div class="mini-line-dark mini-line--w70" />
-            <div class="mini-gap" />
-            <div class="mini-line-dark mini-line--w85" />
-            <div class="mini-line-dark mini-line--w65" />
-            <div class="mini-line-dark mini-line--w80" />
-          </div>
+      <!-- Live Scaled A4 Sample Preview Card (Jobify Hero Style) -->
+      <div class="jobify-hero-preview">
+        <div class="hero-live-a4-frame">
+          <CvTemplatePreview
+            :cv="sampleShowcaseCv"
+            :template="heroTemplate"
+            :accent-hex="heroTemplate.defaultColor"
+            :thumbnail="true"
+          />
+          <span class="hero-live-a4-caption">Sample CV · fictional content · First-page preview</span>
         </div>
-        <span class="mini-caption">Sample CV · 41 Templates · English PDF</span>
       </div>
     </section>
 
@@ -285,7 +315,7 @@ async function onSubmit(): Promise<void> {
     <!-- Why AI CV Checker? 4 Feature Cards -->
     <section class="section-card">
       <span class="eyebrow">YOUR EXPERIENCE, WELL PRESENTED</span>
-      <h2 class="section-title">Why AI CV Checker?</h2>
+      <h2 class="section-title">Why MY CV BUILDER?</h2>
       <div class="why-grid">
         <div class="why-card">
           <Sparkles class="icon-md" aria-hidden="true" />
@@ -309,24 +339,35 @@ async function onSubmit(): Promise<void> {
         </div>
       </div>
 
-      <div class="showcase-strip">
-        <RouterLink
-          v-for="tpl in showcaseTemplates"
-          :key="tpl.id"
-          to="/sample"
-          class="tpl-card"
-        >
-          <span
-            class="tpl-thumb"
-            :class="`tpl-thumb--${tpl.layout}`"
-            :style="{ '--thumb-accent': tpl.defaultColor }"
-            aria-hidden="true"
-          >
-            <span class="tpl-thumb-bar" />
-            <span class="tpl-thumb-lines" />
-          </span>
-          <strong class="tpl-card-name">{{ tpl.name }}</strong>
-        </RouterLink>
+      <div class="jobify-gallery-grid">
+        <article v-for="tpl in showcaseTemplates" :key="tpl.id" class="jobify-tpl-card">
+          <div class="jobify-tpl-preview-box">
+            <CvTemplatePreview
+              :cv="sampleShowcaseCv"
+              :template="tpl"
+              :accent-hex="tpl.defaultColor"
+              :thumbnail="true"
+            />
+            <span class="jobify-tpl-caption">First-page preview</span>
+          </div>
+          <div class="jobify-tpl-meta">
+            <div class="jobify-tpl-title-row">
+              <h3>{{ tpl.name }}</h3>
+              <span class="jobify-new-badge">New</span>
+            </div>
+            <div class="palette-row">
+              <span
+                v-for="pal in CV_PALETTES.slice(0, 6)"
+                :key="`${tpl.id}-${pal.id}`"
+                class="swatch"
+                :style="{ backgroundColor: pal.hex }"
+              />
+            </div>
+            <RouterLink to="/sample" class="btn btn--secondary btn--full btn--sm">
+              Create with this template
+            </RouterLink>
+          </div>
+        </article>
       </div>
     </section>
   </div>

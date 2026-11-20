@@ -94,7 +94,7 @@ for (const vp of VIEWPORTS) {
           await expect(page.getByTestId('cv-avatar-slot')).toBeVisible()
           await page.getByTestId('cat-scenic').click()
           await page.getByTestId('tpl-scenic-angkor-gold').click()
-          await expect(page.getByTestId('cv-template-sheet')).toHaveClass(/cv-layout--scenic-header/)
+          await expect(page.getByTestId('cv-template-sheet')).toHaveClass(/a4-layout--scenic-header/)
 
           await page.getByTestId('preview-pdf-btn').click()
           await expect(page.getByTestId('pdf-preview-modal')).toBeVisible()

@@ -1857,3 +1857,689 @@ body {
   font-size: 0.82rem;
   color: #94a3b8;
 }
+
+/* =====================================================================
+   TRUE A4 (794px x 1123px) SCALED RESUME ENGINE (Jobify-style quality)
+   ===================================================================== */
+.a4-scale-wrapper {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  border-radius: 0.45rem;
+  box-shadow: 0 8px 28px rgba(15, 23, 42, 0.12);
+  background: #ffffff;
+}
+
+.a4-scale-wrapper--thumb {
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.1);
+  pointer-events: none;
+}
+
+.a4-page {
+  --cv-accent: #3b4757;
+  width: 794px;
+  min-height: 1123px;
+  transform-origin: top left;
+  background: #ffffff;
+  color: #1e293b;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.a4-page--serif {
+  font-family: Georgia, 'Times New Roman', serif;
+}
+
+.a4-layout--framed-border {
+  border: 6px double var(--cv-accent);
+}
+
+/* Decorative Corner Triangles (Two-Tone Corner) */
+.a4-corner-tl {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-top: 72px solid #e2e8f0;
+  border-right: 72px solid transparent;
+  z-index: 2;
+}
+
+.a4-corner-tr {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 0;
+  height: 0;
+  border-top: 64px solid var(--cv-accent);
+  border-left: 64px solid transparent;
+  z-index: 2;
+}
+
+/* Full-width Top Banner */
+.a4-top-banner {
+  background: var(--cv-accent);
+  color: #ffffff;
+  padding: 36px 42px;
+  position: relative;
+  overflow: hidden;
+}
+
+.a4-top-banner--backdrop {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--cv-accent) 22%, #ffffff) 0%, #ffffff 100%);
+  color: #0f172a;
+  border-bottom: 3px solid var(--cv-accent);
+}
+
+.a4-top-banner--minimal {
+  background: #ffffff;
+  color: #0f172a;
+  border-top: 8px solid var(--cv-accent);
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.a4-scenic-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.a4-top-banner-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.a4-banner-titles {
+  flex: 1;
+}
+
+.a4-name {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  line-height: 1.15;
+}
+
+.a4-job-title {
+  margin: 6px 0 12px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.88;
+}
+
+.a4-contact-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  font-size: 11.5px;
+  opacity: 0.92;
+}
+
+/* 2-Column Split Grid */
+.a4-columns {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 264px 1fr;
+}
+
+/* Left Sidebar */
+.a4-sidebar {
+  background: var(--cv-accent);
+  color: #f1f5f9;
+  padding: 34px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.a4-sidebar--sand {
+  background: color-mix(in srgb, var(--cv-accent) 11%, #f3efe6);
+  color: #1e293b;
+}
+
+.a4-sidebar--light {
+  background: #f8fafc;
+  color: #1e293b;
+  border-right: 1px solid #e2e8f0;
+}
+
+.a4-sidebar--corner {
+  padding-top: 46px;
+}
+
+.a4-sidebar-photo-box {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+
+.a4-sidebar-photo-box--overlap {
+  justify-content: flex-end;
+  margin-right: -68px;
+  position: relative;
+  z-index: 4;
+}
+
+.a4-avatar,
+.a4-avatar-initials {
+  width: 96px;
+  height: 96px;
+  border-radius: 999px;
+  object-fit: cover;
+  border: 4px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.22);
+}
+
+.a4-avatar--lg,
+.a4-avatar-initials--lg {
+  width: 122px;
+  height: 122px;
+}
+
+.a4-avatar-initials {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--cv-accent) 75%, #ffffff);
+  color: #ffffff;
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+}
+
+.a4-side-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.a4-side-heading {
+  margin: 0;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+  position: relative;
+}
+
+.a4-side-heading::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 34px;
+  height: 2.5px;
+  background: #ffffff;
+}
+
+.a4-sidebar--sand .a4-side-heading,
+.a4-sidebar--light .a4-side-heading {
+  color: var(--cv-accent);
+  border-bottom-color: rgba(15, 23, 42, 0.16);
+}
+
+.a4-sidebar--sand .a4-side-heading::after,
+.a4-sidebar--light .a4-side-heading::after {
+  background: var(--cv-accent);
+}
+
+.a4-side-summary {
+  margin: 0;
+  font-size: 11.2px;
+  line-height: 1.6;
+  opacity: 0.92;
+}
+
+.a4-contact-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 11px;
+  word-break: break-word;
+}
+
+.a4-contact-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.a4-sidebar--sand .a4-contact-list li,
+.a4-sidebar--light .a4-contact-list li {
+  border-bottom-color: rgba(15, 23, 42, 0.08);
+}
+
+.a4-contact-icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  flex-shrink: 0;
+}
+
+.a4-sidebar--sand .a4-contact-icon,
+.a4-sidebar--light .a4-contact-icon {
+  background: var(--cv-accent);
+  color: #ffffff;
+}
+
+.a4-skills-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 10px;
+  font-size: 11px;
+}
+
+.a4-skills-grid--boxes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.a4-skills-grid--boxes .a4-skill-item {
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  padding: 3px 8px;
+  font-size: 10.5px;
+}
+
+.a4-side-edu {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 11px;
+}
+
+.a4-side-edu-deg {
+  font-weight: 700;
+}
+
+.a4-side-edu-sch {
+  opacity: 0.88;
+}
+
+.a4-side-edu-per {
+  font-size: 10px;
+  opacity: 0.72;
+}
+
+.a4-lang-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 11px;
+}
+
+.a4-lang-bar {
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.22);
+  margin-top: 4px;
+  overflow: hidden;
+}
+
+.a4-sidebar--sand .a4-lang-bar,
+.a4-sidebar--light .a4-lang-bar {
+  background: rgba(15, 23, 42, 0.12);
+}
+
+.a4-lang-fill {
+  height: 100%;
+  background: #ffffff;
+  border-radius: 999px;
+}
+
+.a4-sidebar--sand .a4-lang-fill,
+.a4-sidebar--light .a4-lang-fill {
+  background: var(--cv-accent);
+}
+
+/* Right Main Column */
+.a4-main {
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+}
+
+.a4-main-header {
+  padding: 36px 38px 26px;
+}
+
+.a4-main-header--slate {
+  background: #f3f4f6;
+  text-align: center;
+}
+
+.a4-main-header--left {
+  border-bottom: 1px solid #e2e8f0;
+  padding-left: 44px;
+}
+
+.a4-main-name {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #1e293b;
+  line-height: 1.15;
+}
+
+.a4-main-role-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.a4-main-header--left .a4-main-role-row {
+  justify-content: flex-start;
+}
+
+.a4-role-line {
+  width: 28px;
+  height: 1.5px;
+  background: #94a3b8;
+}
+
+.a4-main-role {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+.a4-main-contacts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+  margin-top: 16px;
+  font-size: 11px;
+  color: #334155;
+}
+
+.a4-main-contacts b {
+  color: var(--cv-accent);
+}
+
+.a4-main-body {
+  padding: 26px 38px 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.a4-main-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.a4-section-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.a4-section-title-row--shaded {
+  background: #f3f4f6;
+  padding: 6px 12px;
+  border-left: 4px solid var(--cv-accent);
+}
+
+.a4-section-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  background: var(--cv-accent);
+  color: #ffffff;
+  font-size: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.a4-section-title {
+  margin: 0;
+  font-size: 12.5px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #1e293b;
+  white-space: nowrap;
+}
+
+.a4-section-rule {
+  flex: 1;
+  height: 1px;
+  background: #cbd5e1;
+}
+
+.a4-summary-text {
+  margin: 0;
+  font-size: 11.5px;
+  line-height: 1.65;
+  color: #334155;
+}
+
+.a4-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border-left: 1.5px solid #e2e8f0;
+  padding-left: 16px;
+  margin-left: 8px;
+}
+
+.a4-exp-item {
+  position: relative;
+}
+
+.a4-timeline-dot {
+  position: absolute;
+  left: -21px;
+  top: 4px;
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: var(--cv-accent);
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 0 1px var(--cv-accent);
+}
+
+.a4-exp-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.a4-exp-role {
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.a4-exp-company {
+  margin: 2px 0 0;
+  font-size: 11.5px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.a4-date-pill {
+  flex-shrink: 0;
+  font-size: 10px;
+  font-weight: 600;
+  color: #334155;
+  background: #f1f5f9;
+  padding: 3px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.a4-date-pill--solid {
+  background: var(--cv-accent);
+  color: #ffffff;
+}
+
+.a4-bullets {
+  margin: 6px 0 0;
+  padding-left: 16px;
+  font-size: 11.3px;
+  line-height: 1.55;
+  color: #334155;
+}
+
+.a4-bullets li {
+  margin-bottom: 3px;
+}
+
+.a4-main-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.a4-main-tag {
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #334155;
+  border: 1px solid #e2e8f0;
+}
+
+/* Jobify-style Hero Preview Frame & Gallery Grid */
+.hero-live-a4-frame {
+  width: 100%;
+  max-width: 310px;
+  background: #ffffff;
+  padding: 10px 10px 8px;
+  border-radius: 0.75rem;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.32);
+  transform: rotate(1.5deg);
+}
+
+.hero-live-a4-caption {
+  display: block;
+  text-align: center;
+  margin-top: 6px;
+  font-size: 0.72rem;
+  color: #64748b;
+}
+
+.jobify-gallery-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+@media (min-width: 640px) {
+  .jobify-gallery-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 900px) {
+  .jobify-gallery-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.jobify-tpl-card {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 0.85rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
+}
+
+.jobify-tpl-preview-box {
+  background: #eef2f6;
+  padding: 0.85rem 0.85rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.jobify-tpl-caption {
+  font-size: 0.74rem;
+  color: #64748b;
+}
+
+.jobify-tpl-meta {
+  padding: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.jobify-tpl-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.jobify-tpl-title-row h3 {
+  margin: 0;
+  font-size: 1rem;
+  color: #0f172a;
+}
+
+.jobify-new-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  background: #e0f2fe;
+  color: #0369a1;
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+}
+
+@media print {
+  .a4-scale-wrapper {
+    height: auto !important;
+    box-shadow: none !important;
+    overflow: visible !important;
+  }
+
+  .a4-page {
+    transform: none !important;
+    width: 100% !important;
+    min-height: 0 !important;
+  }
+}
