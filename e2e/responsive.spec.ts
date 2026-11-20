@@ -17,8 +17,33 @@ const SAMPLE_RESPONSE = {
     strengths: ['Clear layout', 'Quantified results', 'Relevant education'],
     weaknesses: ['Generic summary', 'Passive verbs', 'Missing skills grouping'],
     suggestions: ['Add target title', 'Use action verbs', 'Group skills'],
-    improved_cv: 'SOKHA CHAN\nPhnom Penh, Cambodia\nSenior IT Support Specialist\nhttps://example.com/very-long-portfolio-link-that-must-wrap-cleanly-on-mobile-devices',
-    translated_cv: 'សុខា ចាន់\nភ្នំពេញ កម្ពុជា\nអ្នកឯកទេសគាំទ្របច្ចេកវិទ្យាព័ត៌មានជាន់ខ្ពស់',
+    improved_cv: 'SOKHA CHAN\nIT Support & Junior Developer\nPhnom Penh, Cambodia',
+    translated_cv: '',
+    structured_cv: {
+      full_name: 'Sokha Chan',
+      job_title: 'IT Support & Junior Developer',
+      email: 'sokha.chan@example.com',
+      phone: '+855 12 345 678',
+      location: 'Phnom Penh, Cambodia',
+      summary: 'Detail-oriented IT graduate with 1+ year experience in support and Laravel.',
+      experience: [
+        {
+          role: 'IT Support & Junior Developer',
+          company: 'Phnom Penh Fintech Co.',
+          period: '2025 - Present',
+          bullets: ['Resolved 40+ daily tickets with 95% satisfaction.'],
+        },
+      ],
+      education: [
+        {
+          degree: 'B.Sc. in Computer Science',
+          school: 'Royal University of Phnom Penh',
+          period: '2021 - 2025',
+        },
+      ],
+      skills: ['PHP', 'Laravel', 'Vue.js', 'SQL'],
+      languages: ['Khmer (Native)', 'English (Professional)'],
+    },
     error_message: null,
     expires_at: '2026-11-27T06:30:00Z',
     created_at: '2026-11-20T06:30:00Z',
@@ -26,10 +51,12 @@ const SAMPLE_RESPONSE = {
 }
 
 for (const vp of VIEWPORTS) {
-  test.describe(`Responsive QA: ${vp.name}`, () => {
+  test.describe(`Responsive & Template QA: ${vp.name}`, () => {
     test.use({ viewport: { width: vp.width, height: vp.height } })
 
-    test('renders all routes cleanly without horizontal overflow in EN and KM', async ({ page }) => {
+    test('renders all routes and CV templates cleanly without horizontal overflow in EN and KM', async ({
+      page,
+    }) => {
       const errors: string[] = []
       page.on('pageerror', (err) => errors.push(err.message))
       page.on('console', (msg) => {
@@ -48,7 +75,6 @@ for (const vp of VIEWPORTS) {
         await page.goto(path)
         await page.waitForLoadState('networkidle')
 
-        // Check English layout
         const overflowEn = await page.evaluate(
           () => document.documentElement.scrollWidth > window.innerWidth,
         )
@@ -64,25 +90,23 @@ for (const vp of VIEWPORTS) {
         }
 
         if (path === '/sample') {
-          await expect(page.getByTestId('report-view')).toBeVisible()
-          const copyBox = await page.getByTestId('copy-btn').boundingBox()
-          const printBox = await page.getByTestId('print-btn').boundingBox()
-          expect(copyBox).not.toBeNull()
-          expect(printBox).not.toBeNull()
-          if (copyBox && printBox) {
-            expect(copyBox.x + copyBox.width).toBeLessThanOrEqual(vp.width + 1)
-            expect(printBox.x + printBox.width).toBeLessThanOrEqual(vp.width + 1)
-          }
+          await expect(page.getByTestId('cv-template-sheet')).toBeVisible()
+          // Test switching template & color palette
+          await page.getByTestId('tpl-navy-ribbon').click()
+          await expect(page.getByTestId('cv-template-sheet')).toHaveClass(/cv-tpl--navy-ribbon/)
+          await page.getByTestId('palette-color-065f46').click()
+
+          const overflowTpl = await page.evaluate(
+            () => document.documentElement.scrollWidth > window.innerWidth,
+          )
+          expect(overflowTpl, 'Overflow after switching template').toBe(false)
         }
 
-        // Switch to Khmer and re-check overflow
         await page.getByTestId('lang-toggle').click()
         const overflowKm = await page.evaluate(
           () => document.documentElement.scrollWidth > window.innerWidth,
         )
         expect(overflowKm, `Horizontal overflow on ${path} (KM)`).toBe(false)
-
-        // Toggle back to EN for next route
         await page.getByTestId('lang-toggle').click()
       }
 

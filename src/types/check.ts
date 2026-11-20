@@ -1,6 +1,32 @@
 export type CheckServiceType = 'review' | 'km_to_en' | 'en_to_km' | 'full'
 export type CheckStatusType = 'COMPLETED' | 'FAILED' | 'EXPIRED'
 
+export interface CvExperienceDto {
+  role: string
+  company: string
+  period: string
+  bullets: string[]
+}
+
+export interface CvEducationDto {
+  degree: string
+  school: string
+  period: string
+}
+
+export interface StructuredCvDto {
+  full_name: string
+  job_title: string
+  email: string
+  phone: string
+  location: string
+  summary: string
+  experience: CvExperienceDto[]
+  education: CvEducationDto[]
+  skills: string[]
+  languages: string[]
+}
+
 export interface CheckResultDto {
   token: string
   service: CheckServiceType
@@ -12,6 +38,7 @@ export interface CheckResultDto {
   suggestions: string[]
   improved_cv: string | null
   translated_cv: string | null
+  structured_cv: StructuredCvDto | null
   error_message: string | null
   expires_at: string | null
   created_at: string | null
@@ -22,6 +49,19 @@ export interface CreateCheckPayloadDto {
   service: CheckServiceType
   consent: boolean
   email?: string
+}
+
+export interface StructuredCv {
+  fullName: string
+  jobTitle: string
+  email: string
+  phone: string
+  location: string
+  summary: string
+  experience: CvExperienceDto[]
+  education: CvEducationDto[]
+  skills: string[]
+  languages: string[]
 }
 
 export interface CheckResult {
@@ -35,6 +75,7 @@ export interface CheckResult {
   suggestions: string[]
   improvedCv: string | null
   translatedCv: string | null
+  structuredCv: StructuredCv | null
   errorMessage: string | null
   expiresAt: string | null
   createdAt: string | null

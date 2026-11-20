@@ -98,17 +98,13 @@ async function onSubmit(): Promise<void> {
             <input v-model="service" type="radio" value="full" name="service" />
             <span>{{ t[locale].serviceFull }}</span>
           </label>
-          <label class="radio-card" :class="{ 'radio-card--selected': service === 'review' }">
-            <input v-model="service" type="radio" value="review" name="service" />
-            <span>{{ t[locale].serviceReview }}</span>
-          </label>
           <label class="radio-card" :class="{ 'radio-card--selected': service === 'km_to_en' }">
             <input v-model="service" type="radio" value="km_to_en" name="service" />
             <span>{{ t[locale].serviceKmToEn }}</span>
           </label>
-          <label class="radio-card" :class="{ 'radio-card--selected': service === 'en_to_km' }">
-            <input v-model="service" type="radio" value="en_to_km" name="service" />
-            <span>{{ t[locale].serviceEnToKm }}</span>
+          <label class="radio-card" :class="{ 'radio-card--selected': service === 'review' }">
+            <input v-model="service" type="radio" value="review" name="service" />
+            <span>{{ t[locale].serviceReview }}</span>
           </label>
         </div>
       </fieldset>

@@ -14,13 +14,32 @@ describe('ReportView', () => {
     weaknesses: ['Short summary'],
     suggestions: ['Add metrics'],
     improvedCv: 'Improved CV body',
-    translatedCv: 'ប្រវត្តិរូបសង្ខេបជាភាសាខ្មែរ',
+    translatedCv: '',
+    structuredCv: {
+      fullName: 'Sokha Chan',
+      jobTitle: 'IT Support',
+      email: 'sokha@example.com',
+      phone: '+855 12 345 678',
+      location: 'Phnom Penh',
+      summary: 'Dedicated IT graduate.',
+      experience: [
+        {
+          role: 'IT Support',
+          company: 'Fintech Co.',
+          period: '2025 - Present',
+          bullets: ['Resolved 40+ tickets/day'],
+        },
+      ],
+      education: [{ degree: 'B.Sc. CS', school: 'RUPP', period: '2021 - 2025' }],
+      skills: ['Laravel', 'Vue.js'],
+      languages: ['Khmer', 'English'],
+    },
     errorMessage: null,
     expiresAt: '2026-11-27T06:30:00Z',
     createdAt: '2026-11-20T06:30:00Z',
   }
 
-  it('renders score, feedback, and switches between improved and translated tabs', async () => {
+  it('renders structured English CV template and switches templates, colors, and plain text tab', async () => {
     const wrapper = mount(ReportView, {
       props: {
         result: sampleResult,
@@ -29,10 +48,13 @@ describe('ReportView', () => {
     })
 
     expect(wrapper.get('[data-testid="score-badge"]').text()).toContain('76/100')
-    expect(wrapper.get('[data-testid="cv-output-text"]').text()).toBe('Improved CV body')
+    expect(wrapper.get('[data-testid="cv-template-sheet"]').classes()).toContain('cv-tpl--slate-portrait')
 
-    await wrapper.get('[data-testid="tab-translated"]').trigger('click')
-    expect(wrapper.get('[data-testid="cv-output-text"]').text()).toBe('ប្រវត្តិរូបសង្ខេបជាភាសាខ្មែរ')
+    await wrapper.get('[data-testid="tpl-navy-ribbon"]').trigger('click')
+    expect(wrapper.get('[data-testid="cv-template-sheet"]').classes()).toContain('cv-tpl--navy-ribbon')
+
+    await wrapper.get('[data-testid="tab-text"]').trigger('click')
+    expect(wrapper.get('[data-testid="cv-output-text"]').text()).toBe('Improved CV body')
 
     await wrapper.get('[data-testid="tab-original"]').trigger('click')
     expect(wrapper.get('[data-testid="cv-output-text"]').text()).toBe('Original CV text')
