@@ -165,6 +165,10 @@ export function hydrateJobifyTemplate(
   })
 
   // 5. Replace summary BEFORE jobTitle so "Front-end developer building..." matches cleanly
+  const nameParts = (cv.fullName || '').trim().split(/\s+/).filter(Boolean)
+  const firstName = nameParts[0] ?? ''
+  const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : ''
+
   const textReplacements: Array<[RegExp, string]> = [
     [
       /Front-end developer building accessible, responsive web applications with Vue, Nuxt and TypeScript\. Turns product requirements into reliable interfaces, working closely with designers and backend engineers\./gi,
@@ -176,6 +180,8 @@ export function hydrateJobifyTemplate(
     ],
     [/NGOYTRY LYHUOR/g, cv.fullName || ''],
     [/Ngoytry Lyhuor/g, cv.fullName || ''],
+    [/\bNGOYTRY\b/g, firstName],
+    [/\bLYHUOR\b/g, lastName],
     [/Senior UI & Frontend Engineer/gi, cv.jobTitle || ''],
     [/Front-End Developer/gi, cv.jobTitle || ''],
     [/\+855 12 889 412/g, cv.phone || ''],
@@ -208,18 +214,11 @@ export function hydrateJobifyTemplate(
 
   replaceTextNodes(root, textReplacements)
 
-  // 5b. Hide empty social/contact icon rows (never hide decorative SVGs or containers holding an <img>)
-  root.querySelectorAll('svg').forEach((svg) => {
-    const w = Number(svg.getAttribute('width') || 0)
-    if (w > 24) return
-    const row = svg.parentElement
-    if (
-      row &&
-      !row.querySelector('img') &&
-      (row.textContent ?? '').trim() === '' &&
-      row.children.length <= 2
-    ) {
-      row.style.display = 'none'
+  // 5b. Hide ONLY empty [data-cv-contact] rows (e.g. GitHub/LinkedIn/Website left empty after clearing demo handles).
+  // Never hide svg.parentElement directly, because section/contact icon badges wrap <svg> inside a <span> with no text.
+  root.querySelectorAll<HTMLElement>('[data-cv-contact]').forEach((contactRow) => {
+    if ((contactRow.textContent ?? '').trim() === '' && !contactRow.querySelector('img')) {
+      contactRow.style.display = 'none'
     }
   })
 

@@ -335,9 +335,9 @@
 .donor-scope .text-center{text-align:center}
 .donor-scope .text-right{text-align:right}
 .donor-scope .text-justify{text-align:justify}
-.donor-scope .font-sans{font-family:'JobifyCV Plus Jakarta Sans', 'JobifyCV Kantumruy Pro', Arial, sans-serif}
-.donor-scope .font-sans-ui{font-family:'JobifyCV Plus Jakarta Sans', 'JobifyCV Kantumruy Pro', Arial, sans-serif}
-.donor-scope .font-serif{font-family:'JobifyCV Playfair Display', 'JobifyCV Kantumruy Pro', Georgia, serif}
+.donor-scope .font-sans{font-family:'Plus Jakarta Sans', 'Kantumruy Pro', Arial, sans-serif}
+.donor-scope .font-sans-ui{font-family:'Plus Jakarta Sans', 'Kantumruy Pro', Arial, sans-serif}
+.donor-scope .font-serif{font-family:'Playfair Display', 'Kantumruy Pro', Georgia, serif}
 .donor-scope .text-2xl{font-size:1.5rem;line-height:2rem}
 .donor-scope .text-3xl{font-size:1.875rem;line-height:2.25rem}
 .donor-scope .text-\[11px\]{font-size:11px}
@@ -446,7 +446,7 @@
 .donor-scope .transition-all{transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}
 .donor-scope .transition-colors{transition-property:color, background-color, border-color, text-decoration-color, fill, stroke;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}
 .donor-scope .duration-300{transition-duration:300ms}
-.donor-scope{font:12px/1.6 'JobifyCV Plus Jakarta Sans','JobifyCV Kantumruy Pro',Arial,sans-serif;color:#1e293b;--tw-border-spacing-x:0;--tw-border-spacing-y:0}
+.donor-scope{font:12px/1.6 'Plus Jakarta Sans','Kantumruy Pro',Arial,sans-serif;color:#1e293b;--tw-border-spacing-x:0;--tw-border-spacing-y:0}
 .donor-scope *,.donor-scope ::before,.donor-scope ::after{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}
 .donor-scope h1,.donor-scope h2,.donor-scope h3,.donor-scope h4,.donor-scope p,.donor-scope ul,.donor-scope ol{margin:0;padding:0}
 .donor-scope h1,.donor-scope h2,.donor-scope h3,.donor-scope h4{font-size:inherit;font-weight:inherit}

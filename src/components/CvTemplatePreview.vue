@@ -58,6 +58,12 @@ const exactTemplateHtml = computed(() => {
   return hydrateJobifyTemplate(raw, props.cv, props.photoUrl)
 })
 
+const wrapperHeight = computed(() => {
+  const isTwoPage =
+    props.exactSample && !props.thumbnail && exactTemplateHtml.value?.includes('data-page="2"')
+  return `${Math.round((isTwoPage ? 2268 : 1123) * scale.value)}px`
+})
+
 const isSplitSidebar = computed(() =>
   [
     'sidebar-left-dark',
@@ -77,7 +83,7 @@ const isClassicNavy = computed(() => props.template.id === 'phnom-penh-classic')
     ref="wrapperRef"
     class="a4-scale-wrapper"
     :class="{ 'a4-scale-wrapper--thumb': thumbnail }"
-    :style="{ height: `${Math.round(1123 * scale)}px` }"
+    :style="{ height: wrapperHeight }"
   >
     <div
       v-if="exactTemplateHtml"
